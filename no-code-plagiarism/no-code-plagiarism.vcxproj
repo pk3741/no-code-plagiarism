@@ -139,7 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ncp.cpp" />
     <ClCompile Include="no-code-plagiarism.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ncp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
