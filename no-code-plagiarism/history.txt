@@ -1,0 +1,8 @@
+30.11.22
+- utworzono i skonfigurowano projekt
+- utworzono klasę głównego programu
+- wczytano pliki
+
+04.12.22
+- utworzono klasę drzewa poleceń
+- utworzono klasę pojedynczego polecenia

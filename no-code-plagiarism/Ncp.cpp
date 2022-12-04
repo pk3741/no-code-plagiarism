@@ -11,15 +11,15 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
     std::ifstream copy(pathToCopyFile);
 
     std::string line = "";
-    /*while (std::getline(original, line))
-    {
-        std::cout << line << std::endl;
-    }*/
+    // buildCommandTree(original);
+    // buildCommandTree(copy);
     
     original.close();
     copy.close();
     return true;
 }
+
+
 
 Ncp::~Ncp()
 {
