@@ -1,8 +1,16 @@
-30.11.22
-- utworzono i skonfigurowano projekt
-- utworzono klasę głównego programu
-- wczytano pliki
+• 30.11.22
+	history:
+	- utworzono i skonfigurowano projekt
+	- utworzono klasę głównego programu
+	- wczytano pliki
+	used:
+	
+• 04.12.22
+	history:
+	- utworzono klasę drzewa poleceń - CommandTree
+	- utworzono klasę pojedynczego polecenia - Command
+	- Command - dodano funkcję tworzenia się z obiektu string
 
-04.12.22
-- utworzono klasę drzewa poleceń
-- utworzono klasę pojedynczego polecenia
+	used:
+	https://cplusplus.com/reference/string/string/find/
+	
