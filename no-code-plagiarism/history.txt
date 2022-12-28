@@ -3,8 +3,7 @@
 	- utworzono i skonfigurowano projekt
 	- utworzono klasę głównego programu
 	- wczytano pliki
-	used:
-	
+
 • 04.12.22
 	history:
 	- utworzono klasę drzewa poleceń - CommandTree
@@ -15,12 +14,20 @@
 	history:
 	- utworzono funkcję Trim dla std::string
 	- utworzono enumerator COMMAND_TYPE i zadeklarowano wartości dla zmiennych
+	- utworzono regex dla 3 rodzajów operacji na zmiennych
+	- dodano przypisanie odpowiedniego COMMAND_TYPE dla podanej na wejściu operacji dt. zmiennej
 
-	used:
-	https://cplusplus.com/reference/string/string/
-	https://cplusplus.com/reference/string/string/find/
-	*https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
-	*https://www.boost.org/doc/libs/1_80_0/more/getting_started/windows.html
-	https://cplusplus.com/reference/string/string/substr/
-	http://drzewniak.slupsk.pl/~ks/c/c_023.html
-	https://learn.microsoft.com/en-us/cpp/cpp/declarations-and-definitions-cpp?view=msvc-170
+	
+used:
+	start
+		https://cplusplus.com/reference/string/string/
+		https://cplusplus.com/reference/string/string/find/
+		*https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
+		*https://www.boost.org/doc/libs/1_80_0/more/getting_started/windows.html
+
+	28.12.22
+		https://cplusplus.com/reference/string/string/substr/
+		http://drzewniak.slupsk.pl/~ks/c/c_023.html
+		https://www.baeldung.com/cs/definition-vs-declaration-vs-initialization
+		https://en.cppreference.com/w/cpp/regex
+		https://en.wikipedia.org/wiki/Regular_expression

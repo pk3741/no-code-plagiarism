@@ -3,9 +3,12 @@
 
 #include <iostream>
 #include <string>
+#include <regex>
 
 class Command
 {
+protected:
+    enum COMMAND_TYPE commandType;
 public:
     Command();
     Command(std::string&);
