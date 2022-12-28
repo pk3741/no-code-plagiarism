@@ -34,3 +34,12 @@ std::string trimStr(std::string& str)
     
     return str;
 }
+
+enum COMMAND_TYPE
+{
+    //variable types
+    VAR_DECLARATION = 0,
+    VAR_DEFINITION = 1,
+    VAR_INITIALIZATION = 2,
+    VAR_ASSIGNMENT = 3
+};

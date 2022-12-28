@@ -15,4 +15,6 @@ public:
 
 std::string trimStr(std::string&);
 
+enum COMMAND_TYPE;
+
 #endif

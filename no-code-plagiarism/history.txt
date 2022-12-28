@@ -14,6 +14,7 @@
 • 28.12.22
 	history:
 	- utworzono funkcję Trim dla std::string
+	- utworzono enumerator COMMAND_TYPE i zadeklarowano wartości dla zmiennych
 
 	used:
 	https://cplusplus.com/reference/string/string/
@@ -21,3 +22,5 @@
 	*https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
 	*https://www.boost.org/doc/libs/1_80_0/more/getting_started/windows.html
 	https://cplusplus.com/reference/string/string/substr/
+	http://drzewniak.slupsk.pl/~ks/c/c_023.html
+	https://learn.microsoft.com/en-us/cpp/cpp/declarations-and-definitions-cpp?view=msvc-170
