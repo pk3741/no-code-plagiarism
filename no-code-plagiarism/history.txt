@@ -11,6 +11,13 @@
 	- utworzono klasę pojedynczego polecenia - Command
 	- Command - dodano funkcję tworzenia się z obiektu string
 
+• 28.12.22
+	history:
+	- utworzono funkcję Trim dla std::string
+
 	used:
+	https://cplusplus.com/reference/string/string/
 	https://cplusplus.com/reference/string/string/find/
-	
+	*https://www.techiedelight.com/trim-string-cpp-remove-leading-trailing-spaces/
+	*https://www.boost.org/doc/libs/1_80_0/more/getting_started/windows.html
+	https://cplusplus.com/reference/string/string/substr/
