@@ -26,6 +26,5 @@ public:
     ~Command();
 };
 
-std::string trimStr(std::string&);
 
 #endif
