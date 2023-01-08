@@ -13,7 +13,8 @@ enum class COMMAND_TYPE
     VAR_INITIALIZATION = 2,
     VAR_DEFINITION = 3,
     FUNC_DEFINITION = 4,
-    FUNC_EXECUTION = 5
+    FUNC_EXECUTION = 5,
+    FUNC_DECLARATION = 6
 };
 
 class Command
@@ -22,7 +23,6 @@ public:
     COMMAND_TYPE commandType;
     Command();
     Command(std::string&);
-    void makeOfStr(std::string&);
     ~Command();
 };
 

@@ -19,7 +19,9 @@
 
 • 08.01.2023
 	history:
-	
+	- przeniesiono rozpoznawanie z Command do CommandTree w ramach przyszlego dziedziczenia
+	- faza testów na  int xd=5;int a;a=10; poprawka i dziala
+	- dodano funkcje
 
 	
 used:
@@ -37,4 +39,7 @@ used:
 		https://en.wikipedia.org/wiki/Regular_expression
 		https://learn.microsoft.com/en-us/cpp/standard-library/regular-expressions-cpp?view=msvc-170
 		https://cpp0x.pl/kursy/Kurs-C++/Dodatkowe-materialy/Typ-wyliczeniowy-enum/318
+	08.01.2023
+		https://en.cppreference.com/w/cpp/regex/ecmascript
+		https://belaycpp.com/2021/08/24/best-ways-to-convert-an-enum-to-a-string/
 

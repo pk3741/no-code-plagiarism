@@ -1,18 +1,28 @@
 #include <iostream>
 
-void siema()
+void func_declaration();
+
+void func_declaration(int a, int b);
+
+void func_definition()
 {
-    std::cout << "siema" << std::endl;
+    func_execution();
 }
 
-void siema(int i)
+void func_definition(int i, int x)
+{
+}
+
+void func_definition()
 {
 
 }
 
 int main()
 {
+    func_execution();
+    func_execution(1, 5);
     int xd=5;
-    siema();
-    siema(1);
+    int a;
+    a=10;
 }
