@@ -5,13 +5,14 @@ CommandTree::CommandTree()
 
 }
 
-void CommandTree::addCommand(std::string& str)
+COMMAND_TYPE CommandTree::addCommand(std::string& str)
 {
     str = trimStr(str);
     COMMAND_TYPE commandType = recognizeCommandType(str);
     Command newCommand;
     newCommand.commandType = commandType;
     commandList.push_back(newCommand);
+    return commandType;
 }
 
 COMMAND_TYPE CommandTree::recognizeCommandType(std::string& str)

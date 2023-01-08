@@ -12,7 +12,7 @@ protected:
     std::vector<Command> commandList;
 public:
     CommandTree();
-    void addCommand(std::string&);
+    COMMAND_TYPE addCommand(std::string&);
     void displayCommandTree();
     COMMAND_TYPE recognizeCommandType(std::string&);
     ~CommandTree();

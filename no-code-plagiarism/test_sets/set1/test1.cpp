@@ -2,7 +2,7 @@
 
 void func_declaration();
 
-void func_declaration(int a, int b);
+void func_declaration(int, int);
 
 void func_definition()
 {
