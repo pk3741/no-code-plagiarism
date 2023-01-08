@@ -13,7 +13,11 @@ void CommandTree::addCommand(std::string& cmd)
 
 void CommandTree::displayCommandTree()
 {
-    //for(size_t i=0; i<commandList.size(); i++)
+    std::cout << "\n\nCommandTree:" << std::endl;
+    for (size_t i = 0; i < commandList.size(); i++)
+    {
+        std::cout << (int)commandList[i].commandType << std::endl;
+    }
     
 }
 

@@ -1,14 +1,5 @@
 #include "Command.h"
 
-enum COMMAND_TYPE
-{
-    //variable types
-    UNDEFINED = 0,
-    VAR_DECLARATION = 1,
-    VAR_INITIALIZATION = 2,
-    VAR_DEFINITION = 3
-};
-
 Command::Command()
 {
 
@@ -22,6 +13,7 @@ Command::Command(std::string& str)
 
 void Command::makeOfStr(std::string& str)
 {
+    commandType = COMMAND_TYPE::UNDEFINED;
     std::cout << str << std::endl;
     /*
     TODO: unit tests
@@ -29,30 +21,32 @@ void Command::makeOfStr(std::string& str)
     */
 
     //VAR_DEFINITION
-    std::regex varDefinitionRegex("(\\w* \\w*=\\w*)");
+    std::regex varDefinitionRegex("(\\w* \\w*=\\w*[;])");
     bool isVarDefinition = std::regex_search(str, varDefinitionRegex);
+    isVarDefinition ? commandType = COMMAND_TYPE::VAR_DEFINITION : COMMAND_TYPE::UNDEFINED;
+
+    std::regex varDeclarationRegex("(\\w* \\w*[;])");
+    bool isVarDeclaration = std::regex_search(str, varDefinitionRegex);
+    isVarDeclaration ? commandType = COMMAND_TYPE::VAR_DECLARATION : COMMAND_TYPE::UNDEFINED;
+
+    //VAR_INITIALIZATION
+    std::regex varInitializationRegex("(\\w*=\\w*[;])");
+    bool isVarInitialization = std::regex_search(str, varInitializationRegex);
+    isVarInitialization ? commandType = COMMAND_TYPE::VAR_INITIALIZATION : COMMAND_TYPE::UNDEFINED;
+
+
+    //FUNC_DEFINITION
+    std::regex funcDefinitionRegex("(\\w* \\w*[(]\\w*|\\s*[)])");
+    bool isfuncDefinition = std::regex_search(str, funcDefinitionRegex);
+    isfuncDefinition ? commandType = COMMAND_TYPE::FUNC_DEFINITION : COMMAND_TYPE::UNDEFINED;
+
+    //FUNC_EXECUTION    
+    std::regex funcExecuteRegex("(\\w*[(]\\w*[)][;])");
+    bool isFuncExecute = std::regex_search(str, funcExecuteRegex);
+    isFuncExecute ? commandType = COMMAND_TYPE::FUNC_EXECUTION : COMMAND_TYPE::UNDEFINED;
     
-    if (isVarDefinition)
-    {
-        commandType = COMMAND_TYPE::VAR_DEFINITION;
-    }
-    else
-    { 
-        //VAR_DECLARATION
-        std::regex varDeclarationRegex("(\\w* \\w*)");
-        bool isVarDeclaration = std::regex_search(str, varDefinitionRegex);
-        isVarDeclaration ? commandType = COMMAND_TYPE::VAR_DECLARATION : NULL;
 
-        //VAR_INITIALIZATION
-        std::regex varInitializationRegex("(\\w*=\\w*)");
-        bool isVarInitialization = std::regex_search(str, varInitializationRegex);
-        isVarInitialization ? commandType = COMMAND_TYPE::VAR_INITIALIZATION : NULL;
-    }
-    std::cout << commandType << std::endl;
-    
-
-
-
+    std::cout << (int)commandType << std::endl;
 }
 
 Command::~Command()
@@ -62,14 +56,16 @@ Command::~Command()
 
 std::string trimStr(std::string& str)
 {
+    if(str.length()>0)
+    { 
     //trim from front
-    while(str[0]==' ' || str[0]=='\t' || str[0] == '\n' || str[0] == '\0')
-        str = str.substr(1, str.length());
+        while(str[0]==' ' || str[0]=='\t' || str[0] == '\n' || str[0] == '\0')
+            str = str.substr(1, str.length());
 
-    //trim from end
-    while (str[0] == ' ' || str[0] == '\t' || str[0] == '\n' || str[0] == '\0')
-        str = str.substr(0, str.length()-1);
-    
+        //trim from end
+        while (str[0] == ' ' || str[0] == '\t' || str[0] == '\n' || str[0] == '\0')
+            str = str.substr(0, str.length()-1);
+    }
     return str;
 }
 

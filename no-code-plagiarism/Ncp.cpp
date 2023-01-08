@@ -8,6 +8,8 @@ Ncp::Ncp()
 bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std::string& pathToCopyFile)
 {
     std::ifstream original(pathToOrginalFile);
+    CommandTree originalCommandTree;
+
     std::ifstream copy(pathToCopyFile);
 
     std::string line = "";
@@ -19,15 +21,15 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
         if(line.find("main()")!=-1) continue;
         if(line=="{" || line=="}") continue;
 
-        CommandTree originalCommandTree;
         originalCommandTree.addCommand(line);
     }
     
+    originalCommandTree.displayCommandTree();
+
     original.close();
     copy.close();
     return true;
 }
-
 
 
 Ncp::~Ncp()

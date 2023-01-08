@@ -17,6 +17,10 @@
 	- utworzono regex dla 3 rodzajów operacji na zmiennych
 	- dodano przypisanie odpowiedniego COMMAND_TYPE dla podanej na wejściu operacji dt. zmiennej
 
+• 08.01.2023
+	history:
+	
+
 	
 used:
 	start
@@ -31,3 +35,6 @@ used:
 		https://www.baeldung.com/cs/definition-vs-declaration-vs-initialization
 		https://en.cppreference.com/w/cpp/regex
 		https://en.wikipedia.org/wiki/Regular_expression
+		https://learn.microsoft.com/en-us/cpp/standard-library/regular-expressions-cpp?view=msvc-170
+		https://cpp0x.pl/kursy/Kurs-C++/Dodatkowe-materialy/Typ-wyliczeniowy-enum/318
+
