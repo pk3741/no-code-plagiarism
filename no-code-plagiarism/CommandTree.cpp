@@ -58,7 +58,7 @@ void CommandTree::createCommand(std::string& str)
         isfuncDefinition ? found = true : found = false;
     }
 
-    //FUNC_EXECUTION  5
+    //FUNC_EXECUTION 5
     if (found == false)
     {
         std::regex funcExecuteRegex("(\\w+)([(])(.*)([)])([;])");
@@ -100,21 +100,34 @@ void CommandTree::createCommand(std::string& str)
             CommandVarDeclaration cmdVarDeclaration;
             cmdVarDeclaration.commandType = commandType;
             cmdVarDeclaration.varType = matches_vec[1];
-            cmdVarDeclaration.varData = matches_vec[2];
+            usedVarNames.push_back(matches_vec[2]);
+            cmdVarDeclaration.varDeclarationId = (int)usedVarNames.size();
             cmdVarDecList.push_back(cmdVarDeclaration);
             commandList.push_back(&cmdVarDecList.back());
+           
         }   
         break;
 
         case 2:
         {
             CommandVarInitialization cmdVarInitalization;
+            cmdVarInitalization.commandType = commandType;
+            cmdVarInitalization.varData=matches_vec[2];
+            cmdVarInitalization.varDeclarationId=0; //TODO
+            cmdVarInitList.push_back(cmdVarInitalization);
+            commandList.push_back(&cmdVarInitList.back());
         }
         break;
 
         case 3:
         {
             CommandVarDefinition cmdVarDefinition;
+            cmdVarDefinition.commandType=commandType;
+            cmdVarDefinition.varData = matches_vec[4];
+            cmdVarDefinition.varDeclarationId = 0; //TODO
+            cmdVarDefinition.varType = matches_vec[1];
+            cmdVarDefList.push_back(cmdVarDefinition);
+            commandList.push_back(&cmdVarDefList.back());
         }
         break;
         
@@ -122,6 +135,7 @@ void CommandTree::createCommand(std::string& str)
         case 4:
         {
             CommandFuncDefinition cmdFuncDefinition;
+            
         }
         break;
 
@@ -147,16 +161,54 @@ void CommandTree::createCommand(std::string& str)
     }
 }
 
+std::string CommandTree::commandTypeIdToString(int id)
+{
+    if (id == 1) return "VAR_DECLARATION";
+    else if (id == 2) return "VAR_INITIALIZATION";
+    else if (id == 3) return "VAR_DEFINITION";
+    else if (id == 4) return "FUNC_DEFINITION";
+    else if (id == 5) return "FUNC_EXECUTION";
+    else if (id == 6) return "FUNC_DECLARATION";
+    return "UNDEFINED";
+}
+
 void CommandTree::displayCommandTree()
 {
     std::cout << "\n\nCommandTree:" << std::endl;
     for (size_t i = 0; i < commandList.size(); i++)
     {
-        std::cout << (int)commandList[i]->commandType << std::endl;
-        CommandVarDeclaration * cvd = (CommandVarDeclaration*)commandList[i];
-        std::cout << cvd->varData << std::endl;
+        std::cout << commandTypeIdToString((int)commandList[i]->commandType) << " ";
+        
+        //VAR_DECLARATION
+        if(commandList[i]->commandType==COMMAND_TYPE::VAR_DECLARATION)
+        { 
+            auto const * cvd = (CommandVarDeclaration*)commandList[i];
+            std::cout << "varType: " << cvd->varType << ", varDeclarationId: " << cvd->varDeclarationId << std::endl;
+        }
+        //VAR_INITIALIZATION
+        else if (commandList[i]->commandType == COMMAND_TYPE::VAR_INITIALIZATION)
+        {
+            auto const* cvd = (CommandVarInitialization*)commandList[i];
+            std::cout << "varData: "<< cvd->varData << std::endl;
+        }
+        //VAR_DEFINITION
+        else if (commandList[i]->commandType == COMMAND_TYPE::VAR_DEFINITION)
+        {
+            auto const* cvd = (CommandVarDefinition*)commandList[i];
+            std::cout << "varType: " << cvd->varType << ", varData: " << cvd->varData << std::endl;
+        }
+        //FUNC_DEFINITION
+        //FUNC_EXECUTION
+        //FUNC_EXECUTION
+        
     }
     
+}
+
+std::vector<std::string> createParametersVec(std::string& params)
+{
+    std::vector<std::string> parameters;
+    return parameters;
 }
 
 CommandTree::~CommandTree()

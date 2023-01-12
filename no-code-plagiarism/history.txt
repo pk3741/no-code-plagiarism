@@ -1,3 +1,11 @@
+TODO:
+	* polaczenie zmiennych
+	* hierarchia
+	* dolozyc Id do wszystkich elementów
+
+	** poprawic regexy zeby lapalo wiecej
+
+
 • 30.11.22
 	history:
 	- utworzono i skonfigurowano projekt
