@@ -17,14 +17,63 @@ enum class COMMAND_TYPE
     FUNC_DECLARATION = 6
 };
 
+//INITIAL CLASS
 class Command
 {
 public:
     COMMAND_TYPE commandType;
     Command();
-    Command(std::string&);
     ~Command();
 };
 
+//VAR_DECLARATION 1
+class CommandVarDeclaration : public Command
+{
+public:
+    
+    CommandVarDeclaration();
+    ~CommandVarDeclaration();
+};
+
+//VAR_INITIALIZATION 2
+class CommandVarInitialization : public Command
+{
+public:
+    CommandVarInitialization();
+    ~CommandVarInitialization();
+};
+
+//VAR_DEFINITION 3
+class CommandVarDefinition : public Command
+{
+public:
+    CommandVarDefinition();
+    ~CommandVarDefinition();
+};
+
+
+//FUNC_DEFINITION 4
+class CommandFuncDefinition : public Command
+{
+public:
+    CommandFuncDefinition();
+    ~CommandFuncDefinition();
+};
+
+//FUNC_EXECUTION  5
+class CommandFuncExecution : public Command
+{
+public:
+    CommandFuncExecution();
+    ~CommandFuncExecution();
+};
+
+//FUNC_DECLARATION 6
+class CommandFuncDeclaration : public Command
+{
+public:
+    CommandFuncDeclaration();
+    ~CommandFuncDeclaration();
+};
 
 #endif
