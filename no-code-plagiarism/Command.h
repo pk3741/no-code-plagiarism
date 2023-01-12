@@ -30,7 +30,9 @@ public:
 class CommandVarDeclaration : public Command
 {
 public:
-    
+    int varDeclarationId;
+    std::string varType;
+    std::string varData;
     CommandVarDeclaration();
     ~CommandVarDeclaration();
 };
@@ -39,6 +41,8 @@ public:
 class CommandVarInitialization : public Command
 {
 public:
+    int varDeclarationId;
+    std::string varData;
     CommandVarInitialization();
     ~CommandVarInitialization();
 };
@@ -47,6 +51,9 @@ public:
 class CommandVarDefinition : public Command
 {
 public:
+    int varDeclarationId;
+    std::string varType;
+    std::string varData;
     CommandVarDefinition();
     ~CommandVarDefinition();
 };
@@ -56,6 +63,10 @@ public:
 class CommandFuncDefinition : public Command
 {
 public:
+    int funcDeclarationId;
+    std::string returnType;
+    std::vector<std::string> parameters;
+    std::vector<Command> subCommands;
     CommandFuncDefinition();
     ~CommandFuncDefinition();
 };
@@ -64,6 +75,8 @@ public:
 class CommandFuncExecution : public Command
 {
 public:
+    int funcDeclarationId;
+    std::vector<std::string> parameters;
     CommandFuncExecution();
     ~CommandFuncExecution();
 };
@@ -72,6 +85,9 @@ public:
 class CommandFuncDeclaration : public Command
 {
 public:
+    int funcDeclarationId;
+    std::string returnType;
+    std::vector<std::string> parameters;
     CommandFuncDeclaration();
     ~CommandFuncDeclaration();
 };
