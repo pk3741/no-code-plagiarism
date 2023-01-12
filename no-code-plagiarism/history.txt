@@ -43,3 +43,6 @@ used:
 		https://en.cppreference.com/w/cpp/regex/ecmascript
 		https://belaycpp.com/2021/08/24/best-ways-to-convert-an-enum-to-a-string/
 
+	12.03.2023
+		https://en.cppreference.com/w/cpp/regex/regex_match
+
