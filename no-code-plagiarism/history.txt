@@ -45,4 +45,6 @@ used:
 
 	12.03.2023
 		https://en.cppreference.com/w/cpp/regex/regex_match
+		https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/compiler-error-c2360?view=msvc-170
+		https://en.cppreference.com/w/cpp/language/dynamic_cast
 

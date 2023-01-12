@@ -9,12 +9,13 @@
 class CommandTree
 {
 protected:
-    std::vector<Command> commandList;
+    std::vector<Command*> commandList;
+    std::vector<CommandVarDeclaration> cmdVarDecList;
 public:
     CommandTree();
     void addCommand(std::string&);
     void displayCommandTree();
-    Command createCommand(std::string&);
+    void createCommand(std::string&);
     ~CommandTree();
 };
 

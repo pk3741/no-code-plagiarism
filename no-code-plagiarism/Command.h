@@ -23,7 +23,7 @@ class Command
 public:
     COMMAND_TYPE commandType;
     Command();
-    ~Command();
+    virtual ~Command();
 };
 
 //VAR_DECLARATION 1
@@ -34,7 +34,7 @@ public:
     std::string varType;
     std::string varData;
     CommandVarDeclaration();
-    ~CommandVarDeclaration();
+    virtual ~CommandVarDeclaration();
 };
 
 //VAR_INITIALIZATION 2
@@ -44,7 +44,7 @@ public:
     int varDeclarationId;
     std::string varData;
     CommandVarInitialization();
-    ~CommandVarInitialization();
+    virtual ~CommandVarInitialization();
 };
 
 //VAR_DEFINITION 3
@@ -55,7 +55,7 @@ public:
     std::string varType;
     std::string varData;
     CommandVarDefinition();
-    ~CommandVarDefinition();
+    virtual ~CommandVarDefinition();
 };
 
 
@@ -68,7 +68,7 @@ public:
     std::vector<std::string> parameters;
     std::vector<Command> subCommands;
     CommandFuncDefinition();
-    ~CommandFuncDefinition();
+    virtual ~CommandFuncDefinition();
 };
 
 //FUNC_EXECUTION  5
@@ -78,7 +78,7 @@ public:
     int funcDeclarationId;
     std::vector<std::string> parameters;
     CommandFuncExecution();
-    ~CommandFuncExecution();
+    virtual ~CommandFuncExecution();
 };
 
 //FUNC_DECLARATION 6
@@ -89,7 +89,7 @@ public:
     std::string returnType;
     std::vector<std::string> parameters;
     CommandFuncDeclaration();
-    ~CommandFuncDeclaration();
+    virtual ~CommandFuncDeclaration();
 };
 
 #endif
