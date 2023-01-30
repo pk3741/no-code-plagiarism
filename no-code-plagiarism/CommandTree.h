@@ -4,12 +4,13 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <memory>
 #include "Command.h"
 
 class CommandTree
 {
 protected:
-    std::vector<Command*> commandList;
+    std::vector<std::shared_ptr<Command>> commandList;
     std::vector<CommandVarDeclaration> cmdVarDecList;
     std::vector<CommandVarInitialization> cmdVarInitList;
     std::vector<CommandVarDefinition> cmdVarDefList;
