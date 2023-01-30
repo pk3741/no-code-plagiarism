@@ -4,8 +4,8 @@ int main()
 {
     int a=5;
     int b=5;
+    int c;
     int d;
-    a=10;
-    b=15;
-    int c=5;
+    c=5;
+    d=6;
 }

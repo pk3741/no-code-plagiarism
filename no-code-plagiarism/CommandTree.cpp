@@ -1,6 +1,6 @@
 #include "CommandTree.h"
 
-CommandTree::CommandTree()
+CommandTree::CommandTree(): variable_counter(0)
 {
 
 }
@@ -102,8 +102,9 @@ void CommandTree::createCommand(std::string& str)
             CommandVarDeclaration cmdVarDeclaration;
             cmdVarDeclaration.commandType = commandType;
             cmdVarDeclaration.varType = matches_vec[1];
-            usedVarNames.push_back(matches_vec[2]);
-            cmdVarDeclaration.varDeclarationId = (int)usedVarNames.size();
+            cmdVarDeclaration.varDeclarationId = variable_counter;
+            usedVarNames.emplace_back(matches_vec[2],variable_counter);
+            variable_counter++;
             cmdVarDecList.push_back(cmdVarDeclaration);
             commandList.push_back(std::make_shared<CommandVarDeclaration>(cmdVarDecList.back()));
            
@@ -115,7 +116,17 @@ void CommandTree::createCommand(std::string& str)
             CommandVarInitialization cmdVarInitalization;
             cmdVarInitalization.commandType = commandType;
             cmdVarInitalization.varData=matches_vec[2];
-            cmdVarInitalization.varDeclarationId=0; //TODO
+            
+            for (size_t uvn_itt = 0; uvn_itt < usedVarNames.size(); uvn_itt++)
+            {
+                if (usedVarNames[uvn_itt].first == matches_vec[1])
+                {
+                    cmdVarInitalization.varDeclarationId=usedVarNames[uvn_itt].second;
+                    break;
+                }
+            }
+            std::cout << cmdVarInitalization.varDeclarationId << std::endl;
+            // set id here
             cmdVarInitList.push_back(cmdVarInitalization);
             commandList.push_back(std::make_shared<CommandVarInitialization>(cmdVarInitList.back()));
         }
@@ -126,7 +137,9 @@ void CommandTree::createCommand(std::string& str)
             CommandVarDefinition cmdVarDefinition;
             cmdVarDefinition.commandType=commandType;
             cmdVarDefinition.varData = matches_vec[4];
-            cmdVarDefinition.varDeclarationId = 0; //TODO
+            cmdVarDefinition.varDeclarationId = variable_counter;
+            usedVarNames.emplace_back(matches_vec[3], variable_counter);
+            variable_counter++;
             cmdVarDefinition.varType = matches_vec[1];
             cmdVarDefList.push_back(cmdVarDefinition);
             commandList.push_back(std::make_shared<CommandVarDefinition>(cmdVarDefList.back()));
@@ -204,9 +217,9 @@ void CommandTree::displayCommandTree()
         //FUNC_EXECUTION
     }
 
-    for (size_t i = 0; i < cmdVarDecList.size(); i++)
+    for (size_t i = 0; i < usedVarNames.size(); i++)
     {
-        std::cout << cmdVarDecList[i].varDeclarationId << std::endl;
+        std::cout << usedVarNames[i].first << " " << usedVarNames[i].second << std::endl;
     }
     
 }

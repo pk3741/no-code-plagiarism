@@ -17,8 +17,9 @@ protected:
     std::vector<CommandFuncDefinition> cmdFuncDefList;
     std::vector<CommandFuncExecution> cmdFuncExecList;
     std::vector<CommandFuncDeclaration> cmdFuncDecList;
-    std::vector<std::string> usedVarNames;
+    std::vector<std::pair<std::string, int>> usedVarNames;
     std::vector<std::string> userFuncNames;
+    int variable_counter;
 public:
     CommandTree();
     void addCommand(std::string&);
