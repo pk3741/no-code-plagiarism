@@ -103,10 +103,10 @@ void CommandTree::createCommand(std::string& str)
             cmdVarDeclaration.commandType = commandType;
             cmdVarDeclaration.varType = matches_vec[1];
             cmdVarDeclaration.varDeclarationId = variable_counter;
-            usedVarNames.emplace_back(matches_vec[2],variable_counter);
+            usedVarNames.emplace_back(matches_vec[2],variable_counter, matches_vec[1]);
             variable_counter++;
             cmdVarDecList.push_back(cmdVarDeclaration);
-            commandList.push_back(std::make_shared<CommandVarDeclaration>(cmdVarDecList.back()));
+            //commandList.push_back(std::make_shared<CommandVarDeclaration>(cmdVarDecList.back()));
            
         }   
         break;
@@ -119,9 +119,9 @@ void CommandTree::createCommand(std::string& str)
             
             for (size_t uvn_itt = 0; uvn_itt < usedVarNames.size(); uvn_itt++)
             {
-                if (usedVarNames[uvn_itt].first == matches_vec[1])
+                if (std::get<0>(usedVarNames[uvn_itt]) == matches_vec[1])
                 {
-                    cmdVarInitalization.varDeclarationId=usedVarNames[uvn_itt].second;
+                    cmdVarInitalization.varDeclarationId= std::get<1>(usedVarNames[uvn_itt]);
                     break;
                 }
             }
@@ -138,7 +138,7 @@ void CommandTree::createCommand(std::string& str)
             cmdVarDefinition.commandType=commandType;
             cmdVarDefinition.varData = matches_vec[4];
             cmdVarDefinition.varDeclarationId = variable_counter;
-            usedVarNames.emplace_back(matches_vec[3], variable_counter);
+            usedVarNames.emplace_back(matches_vec[3], variable_counter, matches_vec[1]);
             variable_counter++;
             cmdVarDefinition.varType = matches_vec[1];
             cmdVarDefList.push_back(cmdVarDefinition);
@@ -219,7 +219,7 @@ void CommandTree::displayCommandTree()
 
     for (size_t i = 0; i < usedVarNames.size(); i++)
     {
-        std::cout << usedVarNames[i].first << " " << usedVarNames[i].second << std::endl;
+        std::cout << std::get<0>(usedVarNames[i]) << " " << std::get<1>(usedVarNames[i]) << " " << std::get<2>(usedVarNames[i]) << std::endl;
     }
     
 }

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <tuple>
 #include "Command.h"
 
 class CommandTree
@@ -17,7 +18,7 @@ protected:
     std::vector<CommandFuncDefinition> cmdFuncDefList;
     std::vector<CommandFuncExecution> cmdFuncExecList;
     std::vector<CommandFuncDeclaration> cmdFuncDecList;
-    std::vector<std::pair<std::string, int>> usedVarNames;
+    std::vector<std::tuple<std::string, int, std::string>> usedVarNames;
     std::vector<std::string> userFuncNames;
     int variable_counter;
 public:
