@@ -10,6 +10,7 @@ class Ncp
 {
 public:
     Ncp();
+    
     bool checkPlagiarismOfFiles(const std::string&,const std::string&); //load files using paths
     ~Ncp();
     

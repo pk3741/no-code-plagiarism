@@ -28,4 +28,15 @@ CommandFuncExecution::~CommandFuncExecution() {}
 CommandFuncDeclaration::CommandFuncDeclaration() {}
 CommandFuncDeclaration::~CommandFuncDeclaration() {}
 
+//STMT_FOR 7
+CommandStatementFor::CommandStatementFor(): loopEnded(false) {}
+CommandStatementFor::~CommandStatementFor() {}
+
+//STMT_WHILE 8
+CommandStatementWhile::CommandStatementWhile() {}
+CommandStatementWhile::~CommandStatementWhile() {}
+
+//STMT_IF 9
+CommandStatementIf::CommandStatementIf() {}
+CommandStatementIf::~CommandStatementIf() {}
 

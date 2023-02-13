@@ -5,23 +5,19 @@ CommandTree::CommandTree(): variable_counter(0)
 
 }
 
-void CommandTree::addCommand(std::string& str)
+COMMAND_TYPE CommandTree::addCommand(std::string& str)
 {
-    str = trimStr(str);
-    createCommand(str);
+    return createCommand(str);
 }
 
-void CommandTree::createCommand(std::string& str)
+COMMAND_TYPE CommandTree::createCommand(std::string& str)
 {
     COMMAND_TYPE commandType = COMMAND_TYPE::UNDEFINED;
     std::cout << "Line: " << str << std::endl;
-    /*
-*   COMMAND TYPE RECOGNITION
-    TODO: unit tests
-    check what we work with
-    */
+
     std::smatch matches;
     bool found = false;
+
     //VAR_DECLARATION 1
     if(found==false)
     { 
@@ -74,6 +70,34 @@ void CommandTree::createCommand(std::string& str)
         bool isFuncDeclaration = std::regex_match(str, matches, funcDeclarationRegex);
         isFuncDeclaration ? commandType = COMMAND_TYPE::FUNC_DECLARATION : COMMAND_TYPE::UNDEFINED;
         isFuncDeclaration ? found = true : found = false;
+    }
+
+    //STMT_FOR 7
+    if (found == false)
+    {
+        std::regex stmtForRegex("(for)\\s*([(])(.*);(.*);(.*)([)])");
+        
+        bool isForStmt = std::regex_match(str, matches, stmtForRegex);
+        isForStmt ? commandType = COMMAND_TYPE::STMT_FOR : COMMAND_TYPE::UNDEFINED;
+        isForStmt ? found = true : found = false;
+    }
+
+    //STMT_WHILE 8
+    if (found == false)
+    {
+        std::regex stmtWhileRegex("(while)([(])(.*)([)])");
+        bool isWhileStmt = std::regex_match(str, matches, stmtWhileRegex);
+        isWhileStmt ? commandType = COMMAND_TYPE::STMT_WHILE : COMMAND_TYPE::UNDEFINED;
+        isWhileStmt ? found = true : found = false;
+    }
+
+    //STMT_IF 9
+    if (found == false)
+    {
+        std::regex stmtIfRegex("(if)([(])(.*)([)])");
+        bool isIfStmt = std::regex_match(str, matches, stmtIfRegex);
+        isIfStmt ? commandType = COMMAND_TYPE::STMT_IF : COMMAND_TYPE::UNDEFINED;
+        isIfStmt ? found = true : found = false;
     }
     /*
 *   COMMAND OF COMMAND TYPE CREATION
@@ -165,6 +189,38 @@ void CommandTree::createCommand(std::string& str)
             CommandFuncDeclaration cmdFuncDeclaration; 
         }
         break;
+        //STATEMENTS
+        //FOR
+        case 7:
+        {
+            CommandStatementFor cmdStatementFor;
+            cmdStatementFor.start = matches[3];
+            cmdStatementFor.stop = matches[4];
+            cmdStatementFor.change = matches[5];
+            cmdStatementFor.commandType = commandType;
+            cmdStatementFor.subCommands = new CommandTree();
+            cmdStmtForList.push_back(cmdStatementFor);
+            commandList.push_back(std::make_shared<CommandStatementFor>(cmdStmtForList.back()));
+        }
+        break;
+
+        case 8:
+        {
+            CommandStatementWhile cmdStatementWhile;
+            cmdStatementWhile.commandType = commandType;
+            cmdStmtWhileList.push_back(cmdStatementWhile);
+            commandList.push_back(std::make_shared<CommandStatementWhile>(cmdStmtWhileList.back()));
+        }
+        break;
+
+        case 9:
+        {
+            CommandStatementIf cmdStatementIf;
+            cmdStatementIf.commandType = commandType;
+            cmdStmtIfList.push_back(cmdStatementIf);
+            commandList.push_back(std::make_shared<CommandStatementIf>(cmdStmtIfList.back()));
+        }
+        break;
 
         ////OTHER
         //case COMMAND_TYPE::UNDEFINED:
@@ -174,6 +230,7 @@ void CommandTree::createCommand(std::string& str)
 
         break;
     }
+    return commandType;
 }
 
 std::string CommandTree::commandTypeIdToString(int id)
@@ -184,6 +241,9 @@ std::string CommandTree::commandTypeIdToString(int id)
     else if (id == 4) return "FUNC_DEFINITION";
     else if (id == 5) return "FUNC_EXECUTION";
     else if (id == 6) return "FUNC_DECLARATION";
+    else if (id == 7) return "STMT_FOR";
+    else if (id == 8) return "STMT_WHILE";
+    else if (id == 9) return "STMT_IF";
     return "UNDEFINED";
 }
 
@@ -192,7 +252,39 @@ void CommandTree::displayCommandTree()
     std::cout << "\n\nCommandTree:" << std::endl;
     for (size_t i = 0; i < commandList.size(); i++)
     {
-        std::cout << commandTypeIdToString((int)commandList[i]->commandType) << std::endl;
+        auto cvd = commandList[i].get();
+        //std::cout << (int)cvd->commandType << std::endl;
+        switch (cvd->commandType)
+        {
+            case COMMAND_TYPE::VAR_DECLARATION:
+            {
+                auto cvd_dest = std::dynamic_pointer_cast<CommandVarDeclaration>(commandList[i]);
+                std::cout << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << " " << cvd_dest->varType << std::endl;
+                break;
+            }
+            case COMMAND_TYPE::VAR_DEFINITION:
+            {
+                auto cvd_dest = std::dynamic_pointer_cast<CommandVarDefinition>(commandList[i]);
+                std::cout << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << " " << cvd_dest->varType << std::endl;
+                break;
+            }
+            case COMMAND_TYPE::VAR_INITIALIZATION:
+            {
+                auto cvd_dest = std::dynamic_pointer_cast<CommandVarInitialization>(commandList[i]);
+                std::cout << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << std::endl;
+                break;
+            }
+            case COMMAND_TYPE::STMT_FOR:
+            {
+                auto cvd_dest = std::dynamic_pointer_cast<CommandStatementFor>(commandList[i]);
+                std::cout << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
+                for(size_t for_itt=0; for_itt<cvd_dest.get()->subCommands->getCommandListPtrVec().size(); for_itt++)
+                {
+                    std::cout << "\t" << commandTypeIdToString((int)cvd_dest.get()->subCommands->getCommandListPtrVec()[for_itt].get()->commandType) << std::endl;
+                }
+                break;
+            }
+        }
 
         ////VAR_DECLARATION
         //if(commandList[i]->commandType==COMMAND_TYPE::VAR_DECLARATION)
@@ -217,6 +309,7 @@ void CommandTree::displayCommandTree()
         //FUNC_EXECUTION
     }
 
+    std::cout << "\n\nVariable dictionary:\n";
     for (size_t i = 0; i < usedVarNames.size(); i++)
     {
         std::cout << std::get<0>(usedVarNames[i]) << " " << std::get<1>(usedVarNames[i]) << " " << std::get<2>(usedVarNames[i]) << std::endl;
@@ -224,15 +317,14 @@ void CommandTree::displayCommandTree()
     
 }
 
-std::vector<std::string> createParametersVec(std::string& params)
-{
-    std::vector<std::string> parameters;
-    return parameters;
-}
-
 CommandTree::~CommandTree()
 {
 
+}
+
+std::vector<std::shared_ptr<Command>>& CommandTree::getCommandListPtrVec()
+{
+    return commandList;
 }
 
 std::string trimStr(std::string& str)

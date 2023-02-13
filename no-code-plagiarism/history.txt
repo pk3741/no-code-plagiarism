@@ -32,6 +32,11 @@ TODO:
 	- dodano funkcje
 
 	
+	- zmieniono wskaźniki na smart pointery
+	- dodane for while if
+
+
+	
 used:
 	start
 		https://cplusplus.com/reference/string/string/

@@ -5,6 +5,8 @@
 #include <string>
 #include <regex>
 
+class CommandTree;
+
 enum class COMMAND_TYPE
 {
     //variable types
@@ -14,7 +16,10 @@ enum class COMMAND_TYPE
     VAR_DEFINITION = 3,
     FUNC_DEFINITION = 4,
     FUNC_EXECUTION = 5,
-    FUNC_DECLARATION = 6
+    FUNC_DECLARATION = 6,
+    STMT_FOR = 7,
+    STMT_WHILE = 8,
+    STMT_IF = 9
 };
 
 //INITIAL CLASS
@@ -90,5 +95,39 @@ public:
     CommandFuncDeclaration();
     virtual ~CommandFuncDeclaration();
 };
+
+//STMT_FOR  7
+class CommandStatementFor : public Command
+{
+public:
+    std::string start;
+    std::string stop;
+    std::string change;
+    CommandTree * subCommands;
+    bool loopEnded; 
+    //CommandTree subCommands;
+    int statementId;
+    CommandStatementFor();
+    virtual ~CommandStatementFor();
+};
+
+//STMT_WHILE  8
+class CommandStatementWhile : public Command
+{
+public:
+    int statementId;
+    CommandStatementWhile();
+    virtual ~CommandStatementWhile();
+};
+
+//STMT_IF 9
+class CommandStatementIf : public Command
+{
+public:
+    int statementId;
+    CommandStatementIf();
+    virtual ~CommandStatementIf();
+};
+
 
 #endif
