@@ -34,7 +34,7 @@ public:
     CommandTree();
     COMMAND_TYPE addCommand(std::string&);
     std::string commandTypeIdToString(int);
-    void displayCommandTree();
+    void displayCommandTree(std::string& prefix);
     COMMAND_TYPE createCommand(std::string&);
     std::vector<std::string> createParametersVec(std::string&);
     std::vector<std::shared_ptr<Command>>& getCommandListPtrVec();

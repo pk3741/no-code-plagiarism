@@ -28,15 +28,18 @@ CommandFuncExecution::~CommandFuncExecution() {}
 CommandFuncDeclaration::CommandFuncDeclaration() {}
 CommandFuncDeclaration::~CommandFuncDeclaration() {}
 
+CommandStatement::CommandStatement():loopEnded(false) {}
+CommandStatement::~CommandStatement() {}
+
 //STMT_FOR 7
-CommandStatementFor::CommandStatementFor(): loopEnded(false) {}
+CommandStatementFor::CommandStatementFor() { loopEnded=false; }
 CommandStatementFor::~CommandStatementFor() {}
 
 //STMT_WHILE 8
-CommandStatementWhile::CommandStatementWhile() {}
+CommandStatementWhile::CommandStatementWhile() { loopEnded=false; }
 CommandStatementWhile::~CommandStatementWhile() {}
 
 //STMT_IF 9
-CommandStatementIf::CommandStatementIf() {}
+CommandStatementIf::CommandStatementIf() { loopEnded=false; }
 CommandStatementIf::~CommandStatementIf() {}
 

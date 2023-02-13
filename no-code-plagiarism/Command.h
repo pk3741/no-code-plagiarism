@@ -96,23 +96,30 @@ public:
     virtual ~CommandFuncDeclaration();
 };
 
+//
+class CommandStatement : public Command
+{   
+    public:
+    CommandTree * subCommands;
+    int statementId;
+    bool loopEnded; 
+    CommandStatement();
+    virtual ~CommandStatement();
+};
+
 //STMT_FOR  7
-class CommandStatementFor : public Command
+class CommandStatementFor : public CommandStatement
 {
 public:
     std::string start;
     std::string stop;
     std::string change;
-    CommandTree * subCommands;
-    bool loopEnded; 
-    //CommandTree subCommands;
-    int statementId;
     CommandStatementFor();
     virtual ~CommandStatementFor();
 };
 
 //STMT_WHILE  8
-class CommandStatementWhile : public Command
+class CommandStatementWhile : public CommandStatement
 {
 public:
     int statementId;
@@ -121,7 +128,7 @@ public:
 };
 
 //STMT_IF 9
-class CommandStatementIf : public Command
+class CommandStatementIf : public CommandStatement
 {
 public:
     int statementId;

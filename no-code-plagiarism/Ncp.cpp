@@ -46,6 +46,24 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
                     }
                     
                 }
+                else if (subCommandType == COMMAND_TYPE::STMT_WHILE)
+                {
+                    bool cvd_dest = std::dynamic_pointer_cast<CommandStatementWhile>(globalCT.getCommandListPtrVec().back()).get()->loopEnded;
+                    if (cvd_dest == false)
+                    {
+                        subCommand = true;
+                    }
+                    
+                }
+                else if (subCommandType == COMMAND_TYPE::STMT_IF)
+                {
+                    bool cvd_dest = std::dynamic_pointer_cast<CommandStatementIf>(globalCT.getCommandListPtrVec().back()).get()->loopEnded;
+                    if (cvd_dest == false)
+                    {
+                        subCommand = true;
+                    }
+                    
+                }
             }
         }
 
@@ -64,6 +82,20 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
                     subCommand = false;
                     std::cout << "here:" << cvd_dest.get()->loopEnded <<std::endl;
                 }
+                else if (subCommandType == COMMAND_TYPE::STMT_WHILE)
+                {
+                    auto cvd_dest = std::dynamic_pointer_cast<CommandStatementWhile>(globalCT.getCommandListPtrVec().back());
+                    cvd_dest.get()->loopEnded = true;
+                    subCommand = false;
+                    std::cout << "here:" << cvd_dest.get()->loopEnded <<std::endl;
+                }
+                 else if (subCommandType == COMMAND_TYPE::STMT_IF)
+                {
+                    auto cvd_dest = std::dynamic_pointer_cast<CommandStatementIf>(globalCT.getCommandListPtrVec().back());
+                    cvd_dest.get()->loopEnded = true;
+                    subCommand = false;
+                    std::cout << "here:" << cvd_dest.get()->loopEnded <<std::endl;
+                }
             }
             else
             {
@@ -74,11 +106,13 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
                 }
                 else if (subCommandType == COMMAND_TYPE::STMT_WHILE)
                 {
-                    //
+                    auto cvd_dest = std::dynamic_pointer_cast<CommandStatementWhile>(globalCT.getCommandListPtrVec().back());
+                    cvd_dest.get()->subCommands->addCommand(line);
                 }
                 else if (subCommandType == COMMAND_TYPE::STMT_IF)
                 {
-                    //
+                    auto cvd_dest = std::dynamic_pointer_cast<CommandStatementIf>(globalCT.getCommandListPtrVec().back());
+                    cvd_dest.get()->subCommands->addCommand(line);
                 }
                 else
                 {
@@ -89,7 +123,8 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
     }
 
     //originalCommandTree.displayCommandTree();
-    globalCT.displayCommandTree();
+    std::string nullstr="";
+    globalCT.displayCommandTree(nullstr);
 
     original.close();
     copy.close();
