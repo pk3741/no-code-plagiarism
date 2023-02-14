@@ -33,6 +33,7 @@ protected:
 public:
     CommandTree();
     COMMAND_TYPE addCommand(std::string&);
+    void addSubCommand(std::string&);
     std::string commandTypeIdToString(int);
     void displayCommandTree(std::string& prefix);
     COMMAND_TYPE createCommand(std::string&);

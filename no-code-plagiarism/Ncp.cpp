@@ -75,21 +75,10 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
         {
             if (line == "}")
             {
-                if (subCommandType == COMMAND_TYPE::STMT_FOR)
-                {
-                    auto cvd_dest = std::dynamic_pointer_cast<CommandStatement>(globalCT.getCommandListPtrVec().back());
-                    cvd_dest.get()->loopEnded = true;
-                    subCommand = false;
-                    std::cout << "here:" << cvd_dest.get()->loopEnded <<std::endl;
-                }
-                else if (subCommandType == COMMAND_TYPE::STMT_WHILE)
-                {
-                    auto cvd_dest = std::dynamic_pointer_cast<CommandStatement>(globalCT.getCommandListPtrVec().back());
-                    cvd_dest.get()->loopEnded = true;
-                    subCommand = false;
-                    std::cout << "here:" << cvd_dest.get()->loopEnded <<std::endl;
-                }
-                 else if (subCommandType == COMMAND_TYPE::STMT_IF)
+                if (subCommandType == COMMAND_TYPE::STMT_FOR ||
+                    subCommandType == COMMAND_TYPE::STMT_WHILE ||
+                    subCommandType == COMMAND_TYPE::STMT_IF
+                   )
                 {
                     auto cvd_dest = std::dynamic_pointer_cast<CommandStatement>(globalCT.getCommandListPtrVec().back());
                     cvd_dest.get()->loopEnded = true;
@@ -99,24 +88,14 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
             }
             else
             {
-                if (subCommandType == COMMAND_TYPE::STMT_FOR)
+                if (subCommandType == COMMAND_TYPE::STMT_FOR ||
+                    subCommandType == COMMAND_TYPE::STMT_WHILE ||
+                    subCommandType == COMMAND_TYPE::STMT_IF
+                   )
                 {
                     auto cvd_dest = std::dynamic_pointer_cast<CommandStatement>(globalCT.getCommandListPtrVec().back());
-                    cvd_dest.get()->subCommands->addCommand(line);
-                }
-                else if (subCommandType == COMMAND_TYPE::STMT_WHILE)
-                {
-                    auto cvd_dest = std::dynamic_pointer_cast<CommandStatement>(globalCT.getCommandListPtrVec().back());
-                    cvd_dest.get()->subCommands->addCommand(line);
-                }
-                else if (subCommandType == COMMAND_TYPE::STMT_IF)
-                {
-                    auto cvd_dest = std::dynamic_pointer_cast<CommandStatement>(globalCT.getCommandListPtrVec().back());
-                    cvd_dest.get()->subCommands->addCommand(line);
-                }
-                else
-                {
-                    //
+                    //cvd_dest.get()->subCommands->addCommand(line);
+                    globalCT.addSubCommand(line);
                 }
             }
         }

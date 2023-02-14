@@ -1,6 +1,6 @@
 #include "CommandTree.h"
 
-CommandTree::CommandTree(): variable_counter(0)
+CommandTree::CommandTree() : variable_counter(0)
 {
 
 }
@@ -19,8 +19,8 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     bool found = false;
 
     //VAR_DECLARATION 1
-    if(found==false)
-    { 
+    if (found == false)
+    {
         std::regex varDeclarationRegex("(\\w+)\\s(\\w+)[;]");
         bool isVarDeclaration = std::regex_match(str, matches, varDeclarationRegex);
         isVarDeclaration ? commandType = COMMAND_TYPE::VAR_DECLARATION : COMMAND_TYPE::UNDEFINED;
@@ -28,8 +28,8 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     }
 
     //VAR_INITIALIZATION 2
-    if(found==false)
-    { 
+    if (found == false)
+    {
         std::regex varInitializationRegex("(\\w+)=(\\w+)[;]");
         bool isVarInitialization = std::regex_match(str, matches, varInitializationRegex);
         isVarInitialization ? commandType = COMMAND_TYPE::VAR_INITIALIZATION : COMMAND_TYPE::UNDEFINED;
@@ -76,7 +76,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     if (found == false)
     {
         std::regex stmtForRegex("(for)\\s*([(])(.*);(.*);(.*)([)])");
-        
+
         bool isForStmt = std::regex_match(str, matches, stmtForRegex);
         isForStmt ? commandType = COMMAND_TYPE::STMT_FOR : COMMAND_TYPE::UNDEFINED;
         isForStmt ? found = true : found = false;
@@ -104,7 +104,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
 *   */
 
 
-    //ALL TO VECTOR
+//ALL TO VECTOR
     std::cout << (int)commandType << std::endl;
     std::cout << "Matches(" << matches.size() << "):" << std::endl;
     std::vector<std::string> matches_vec;
@@ -116,125 +116,165 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
         matches_vec.push_back(ssub_match);
     }
     std::cout << "\n";
-    
-    
-    switch((int)commandType)
+
+
+    switch ((int)commandType)
     {
         //VAR
-        case 1:
-        {
-            CommandVarDeclaration cmdVarDeclaration;
-            cmdVarDeclaration.commandType = commandType;
-            cmdVarDeclaration.varType = matches_vec[1];
-            cmdVarDeclaration.varDeclarationId = variable_counter;
-            usedVarNames.emplace_back(matches_vec[2],variable_counter, matches_vec[1]);
-            variable_counter++;
-            cmdVarDecList.push_back(cmdVarDeclaration);
-            //commandList.push_back(std::make_shared<CommandVarDeclaration>(cmdVarDecList.back()));
-           
-        }   
-        break;
+    case 1:
+    {
+        CommandVarDeclaration cmdVarDeclaration;
+        cmdVarDeclaration.commandType = commandType;
+        cmdVarDeclaration.varType = matches_vec[1];
+        cmdVarDeclaration.varDeclarationId = variable_counter;
+        usedVarNames.emplace_back(matches_vec[2], variable_counter, matches_vec[1]);
+        variable_counter++;
+        cmdVarDecList.push_back(cmdVarDeclaration);
+        //commandList.push_back(std::make_shared<CommandVarDeclaration>(cmdVarDecList.back()));
 
-        case 2:
+    }
+    break;
+
+    case 2:
+    {
+        CommandVarInitialization cmdVarInitalization;
+        cmdVarInitalization.commandType = commandType;
+        cmdVarInitalization.varData = matches_vec[2];
+
+        for (size_t uvn_itt = 0; uvn_itt < usedVarNames.size(); uvn_itt++)
         {
-            CommandVarInitialization cmdVarInitalization;
-            cmdVarInitalization.commandType = commandType;
-            cmdVarInitalization.varData=matches_vec[2];
-            
-            for (size_t uvn_itt = 0; uvn_itt < usedVarNames.size(); uvn_itt++)
+            if (std::get<0>(usedVarNames[uvn_itt]) == matches_vec[1])
             {
-                if (std::get<0>(usedVarNames[uvn_itt]) == matches_vec[1])
-                {
-                    cmdVarInitalization.varDeclarationId= std::get<1>(usedVarNames[uvn_itt]);
-                    break;
-                }
+                cmdVarInitalization.varDeclarationId = std::get<1>(usedVarNames[uvn_itt]);
+                break;
             }
-            std::cout << cmdVarInitalization.varDeclarationId << std::endl;
-            // set id here
-            cmdVarInitList.push_back(cmdVarInitalization);
-            commandList.push_back(std::make_shared<CommandVarInitialization>(cmdVarInitList.back()));
         }
-        break;
 
-        case 3:
-        {
-            CommandVarDefinition cmdVarDefinition;
-            cmdVarDefinition.commandType=commandType;
-            cmdVarDefinition.varData = matches_vec[4];
-            cmdVarDefinition.varDeclarationId = variable_counter;
-            usedVarNames.emplace_back(matches_vec[3], variable_counter, matches_vec[1]);
-            variable_counter++;
-            cmdVarDefinition.varType = matches_vec[1];
-            cmdVarDefList.push_back(cmdVarDefinition);
-            commandList.push_back(std::make_shared<CommandVarDefinition>(cmdVarDefList.back()));
-        }
-        break;
-        
-        //FUNC
-        case 4:
-        {
-            CommandFuncDefinition cmdFuncDefinition;
-            
-        }
-        break;
+        std::cout << cmdVarInitalization.varDeclarationId << std::endl;
+        // set id here
+        cmdVarInitList.push_back(cmdVarInitalization);
+        commandList.push_back(std::make_shared<CommandVarInitialization>(cmdVarInitList.back()));
+    }
+    break;
 
-        case 5:
-        {
-            CommandFuncExecution cmdFuncExecution;
-        }
-        break;
+    case 3:
+    {
+        CommandVarDefinition cmdVarDefinition;
+        cmdVarDefinition.commandType = commandType;
+        cmdVarDefinition.varData = matches_vec[4];
+        cmdVarDefinition.varDeclarationId = variable_counter;
+        usedVarNames.emplace_back(matches_vec[3], variable_counter, matches_vec[1]);
+        variable_counter++;
+        cmdVarDefinition.varType = matches_vec[1];
+        cmdVarDefList.push_back(cmdVarDefinition);
+        commandList.push_back(std::make_shared<CommandVarDefinition>(cmdVarDefList.back()));
+    }
+    break;
 
-        case 6:
-        {
-            CommandFuncDeclaration cmdFuncDeclaration; 
-        }
-        break;
-        //STATEMENTS
-        //FOR
-        case 7:
-        {
-            CommandStatementFor cmdStatementFor;
-            cmdStatementFor.start = matches[3];
-            cmdStatementFor.stop = matches[4];
-            cmdStatementFor.change = matches[5];
-            cmdStatementFor.commandType = commandType;
-            cmdStatementFor.subCommands = new CommandTree();
-            cmdStmtForList.push_back(cmdStatementFor);
-            commandList.push_back(std::make_shared<CommandStatementFor>(cmdStmtForList.back()));
-        }
-        break;
+    //FUNC
+    case 4:
+    {
+        CommandFuncDefinition cmdFuncDefinition;
 
-        //WHILE
-        case 8:
-        {
-            CommandStatementWhile cmdStatementWhile;
-            cmdStatementWhile.commandType = commandType;
-            cmdStatementWhile.subCommands = new CommandTree();
-            cmdStmtWhileList.push_back(cmdStatementWhile);
-            commandList.push_back(std::make_shared<CommandStatementWhile>(cmdStmtWhileList.back()));
-        }
-        break;
+    }
+    break;
 
-        //IF
-        case 9:
-        {
-            CommandStatementIf cmdStatementIf;
-            cmdStatementIf.commandType = commandType;
-            cmdStatementIf.subCommands = new CommandTree();
-            cmdStmtIfList.push_back(cmdStatementIf);
-            commandList.push_back(std::make_shared<CommandStatementIf>(cmdStmtIfList.back()));
-        }
-        break;
+    case 5:
+    {
+        CommandFuncExecution cmdFuncExecution;
+    }
+    break;
 
-        ////OTHER
-        //case COMMAND_TYPE::UNDEFINED:
-        //    break;
+    case 6:
+    {
+        CommandFuncDeclaration cmdFuncDeclaration;
+    }
+    break;
+    //STATEMENTS
+    //FOR
+    case 7:
+    {
+        CommandStatementFor cmdStatementFor;
+        cmdStatementFor.start = matches[3];
+        cmdStatementFor.stop = matches[4];
+        cmdStatementFor.change = matches[5];
+        cmdStatementFor.commandType = commandType;
+        cmdStatementFor.subCommands = new CommandTree();
+        cmdStmtForList.push_back(cmdStatementFor);
+        commandList.push_back(std::make_shared<CommandStatementFor>(cmdStmtForList.back()));
+    }
+    break;
 
-        default:
+    //WHILE
+    case 8:
+    {
+        CommandStatementWhile cmdStatementWhile;
+        cmdStatementWhile.commandType = commandType;
+        cmdStatementWhile.subCommands = new CommandTree();
+        cmdStmtWhileList.push_back(cmdStatementWhile);
+        commandList.push_back(std::make_shared<CommandStatementWhile>(cmdStmtWhileList.back()));
+    }
+    break;
+
+    //IF
+    case 9:
+    {
+        CommandStatementIf cmdStatementIf;
+        cmdStatementIf.commandType = commandType;
+        cmdStatementIf.subCommands = new CommandTree();
+        cmdStmtIfList.push_back(cmdStatementIf);
+        commandList.push_back(std::make_shared<CommandStatementIf>(cmdStmtIfList.back()));
+    }
+    break;
+
+    ////OTHER
+    //case COMMAND_TYPE::UNDEFINED:
+    //    break;
+
+    default:
 
         break;
     }
     return commandType;
+}
+
+void CommandTree::addSubCommand(std::string& line)
+{
+    std::dynamic_pointer_cast<CommandStatement>(this->getCommandListPtrVec().back()).get()->subCommands->addCommand(line);
+    auto cvd = std::dynamic_pointer_cast<CommandStatement>(this->getCommandListPtrVec().back()).get()->subCommands->getCommandListPtrVec().back();
+    if (cvd.get()->commandType == COMMAND_TYPE::VAR_INITIALIZATION)
+    {
+        auto cvd2 = std::dynamic_pointer_cast<CommandVarInitialization>(cvd);
+        if (cvd2.get()->varDeclarationId == -1) //VARIABLE WAS NOT CREATED INSIDE LOOP
+        {
+            //CHECK IN GLOBALS
+            std::smatch matches;
+            std::regex varInitializationRegex("(\\w+)=(\\w+)[;]");
+            std::regex_match(line, matches, varInitializationRegex);
+
+            //ALL TO VECTOR
+            std::vector<std::string> matches_vec;
+            for (size_t i = 0; i < matches.size(); i++)
+            {
+                std::ssub_match sub_match = matches[i];
+                std::string ssub_match = sub_match.str();
+                matches_vec.push_back(ssub_match);
+            }
+            std::string var_name = matches_vec[1];
+
+            for (size_t uvn_itt = 0; uvn_itt < usedVarNames.size(); uvn_itt++)
+            {
+                if (std::get<0>(usedVarNames[uvn_itt]) == matches_vec[1])
+                {
+                    cvd2.get()->varDeclarationId = std::get<1>(usedVarNames[uvn_itt]);
+                    cvd2.get()->upDefined = true;
+                    break;
+                }
+            }
+
+        }
+    }
+
 }
 
 std::string CommandTree::commandTypeIdToString(int id)
@@ -253,13 +293,16 @@ std::string CommandTree::commandTypeIdToString(int id)
 
 void CommandTree::displayCommandTree(std::string& prefix)
 {
-    if(prefix=="") std::cout << "\n\nCommandTree:" << std::endl;
-    for (size_t i = 0; i < commandList.size(); i++)
+    if (prefix == "") std::cout << "\n\nCommandTree:" << std::endl;
+
+    if (commandList.size() > 0)
     {
-        auto cvd = commandList[i].get();
-        //std::cout << (int)cvd->commandType << std::endl;
-        switch (cvd->commandType)
+        for (size_t i = 0; i < commandList.size(); i++)
         {
+            auto cvd = commandList[i].get();
+            //std::cout << (int)cvd->commandType << std::endl;
+            switch (cvd->commandType)
+            {
             case COMMAND_TYPE::VAR_DECLARATION:
             {
                 auto cvd_dest = std::dynamic_pointer_cast<CommandVarDeclaration>(commandList[i]);
@@ -269,13 +312,13 @@ void CommandTree::displayCommandTree(std::string& prefix)
             case COMMAND_TYPE::VAR_DEFINITION:
             {
                 auto cvd_dest = std::dynamic_pointer_cast<CommandVarDefinition>(commandList[i]);
-                std::cout << prefix <<  commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << " " << cvd_dest->varType << std::endl;
+                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << " " << cvd_dest->varType << std::endl;
                 break;
             }
             case COMMAND_TYPE::VAR_INITIALIZATION:
             {
                 auto cvd_dest = std::dynamic_pointer_cast<CommandVarInitialization>(commandList[i]);
-                std::cout << prefix <<  commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << std::endl;
+                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << std::endl;
                 break;
             }
             case COMMAND_TYPE::STMT_FOR:
@@ -284,7 +327,7 @@ void CommandTree::displayCommandTree(std::string& prefix)
                 auto cvd_dest = std::dynamic_pointer_cast<CommandStatementFor>(commandList[i]);
                 std::cout << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
                 cvd_dest.get()->subCommands->displayCommandTree(prefix);
-
+                break;
             }
             case COMMAND_TYPE::STMT_WHILE:
             {
@@ -300,6 +343,8 @@ void CommandTree::displayCommandTree(std::string& prefix)
                 auto cvd_dest = std::dynamic_pointer_cast<CommandStatementIf>(commandList[i]);
                 std::cout << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
                 cvd_dest.get()->subCommands->displayCommandTree(prefix);
+                break;
+            }
             }
         }
 
@@ -334,7 +379,7 @@ void CommandTree::displayCommandTree(std::string& prefix)
             std::cout << std::get<0>(usedVarNames[i]) << " " << std::get<1>(usedVarNames[i]) << " " << std::get<2>(usedVarNames[i]) << std::endl;
         }
     }
-    
+
 }
 
 CommandTree::~CommandTree()

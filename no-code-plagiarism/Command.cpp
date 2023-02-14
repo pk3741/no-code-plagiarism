@@ -9,11 +9,11 @@ CommandVarDeclaration::CommandVarDeclaration() {}
 CommandVarDeclaration::~CommandVarDeclaration() {}
 
 //VAR_INITIALIZATION 2
-CommandVarInitialization::CommandVarInitialization() {}
+CommandVarInitialization::CommandVarInitialization(): varDeclarationId(-1), upDefined(false) {}
 CommandVarInitialization::~CommandVarInitialization() {}
 
 //VAR_DEFINITION 3
-CommandVarDefinition::CommandVarDefinition() {}
+CommandVarDefinition::CommandVarDefinition(): varDeclarationId(-1) {}
 CommandVarDefinition::~CommandVarDefinition() {}
 
 //FUNC_DEFINITION 4

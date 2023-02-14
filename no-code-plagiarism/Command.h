@@ -47,6 +47,7 @@ class CommandVarInitialization : public Command
 public:
     int varDeclarationId;
     std::string varData;
+    bool upDefined;
     CommandVarInitialization();
     virtual ~CommandVarInitialization();
 };
