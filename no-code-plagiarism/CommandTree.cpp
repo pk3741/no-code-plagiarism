@@ -13,7 +13,8 @@ COMMAND_TYPE CommandTree::addCommand(std::string& str)
 COMMAND_TYPE CommandTree::createCommand(std::string& str)
 {
     COMMAND_TYPE commandType = COMMAND_TYPE::UNDEFINED;
-    std::cout << "Line: " << str << std::endl;
+    
+    if(_NCP_CMDTREE_DEBUG_==1) std::cout << "Line: " << str << std::endl;
 
     std::smatch matches;
     bool found = false;
@@ -30,7 +31,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     //VAR_INITIALIZATION 2
     if (found == false)
     {
-        std::regex varInitializationRegex("(\\w+)=(.+)[;]");
+        std::regex varInitializationRegex("(\\w+)\\s*=\\s*(.+)[;]");
         bool isVarInitialization = std::regex_match(str, matches, varInitializationRegex);
         isVarInitialization ? commandType = COMMAND_TYPE::VAR_INITIALIZATION : COMMAND_TYPE::UNDEFINED;
         isVarInitialization ? found = true : found = false;
@@ -39,7 +40,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     //VAR_DEFINITION 3
     if (found == false)
     {
-        std::regex varDefinitionRegex("(\\w+)(\\s)(\\w+)=(.+)[;]");
+        std::regex varDefinitionRegex("(\\w+)(\\s)(\\w+)\\s*=\\s*(.+)[;]");
         bool isVarDefinition = std::regex_match(str, matches, varDefinitionRegex);
         isVarDefinition ? commandType = COMMAND_TYPE::VAR_DEFINITION : COMMAND_TYPE::UNDEFINED;
         isVarDefinition ? found = true : found = false;
@@ -85,7 +86,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     //STMT_WHILE 8
     if (found == false)
     {
-        std::regex stmtWhileRegex("(while)([(])(.*)([)])");
+        std::regex stmtWhileRegex("(while)\\s*([(])(.*)([)])");
         bool isWhileStmt = std::regex_match(str, matches, stmtWhileRegex);
         isWhileStmt ? commandType = COMMAND_TYPE::STMT_WHILE : COMMAND_TYPE::UNDEFINED;
         isWhileStmt ? found = true : found = false;
@@ -94,28 +95,24 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     //STMT_IF 9
     if (found == false)
     {
-        std::regex stmtIfRegex("(if)([(])(.*)([)])");
+        std::regex stmtIfRegex("(if)\\s*([(])(.*)([)])");
         bool isIfStmt = std::regex_match(str, matches, stmtIfRegex);
         isIfStmt ? commandType = COMMAND_TYPE::STMT_IF : COMMAND_TYPE::UNDEFINED;
         isIfStmt ? found = true : found = false;
     }
-    /*
-*   COMMAND OF COMMAND TYPE CREATION
-*   */
 
-
-//ALL TO VECTOR
-    std::cout << (int)commandType << std::endl;
-    std::cout << "Matches(" << matches.size() << "):" << std::endl;
+    //ALL TO VECTOR
+    if(_NCP_CMDTREE_DEBUG_==1) std::cout << (int)commandType << std::endl;
+    if(_NCP_CMDTREE_DEBUG_==1) std::cout << "Matches(" << matches.size() << "):" << std::endl;
     std::vector<std::string> matches_vec;
     for (size_t i = 0; i < matches.size(); i++)
     {
         std::ssub_match sub_match = matches[i];
         std::string ssub_match = sub_match.str();
-        std::cout << "Match " << i << ": " << ssub_match << std::endl;
+        if(_NCP_CMDTREE_DEBUG_==1) std::cout << "Match " << i << ": " << ssub_match << std::endl;
         matches_vec.push_back(ssub_match);
     }
-    std::cout << "\n";
+    if(_NCP_CMDTREE_DEBUG_==1) std::cout << "\n";
 
 
     switch ((int)commandType)
@@ -150,7 +147,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
             }
         }
 
-        std::cout << cmdVarInitalization.varDeclarationId << std::endl;
+        if(_NCP_CMDTREE_DEBUG_==1) std::cout << cmdVarInitalization.varDeclarationId << std::endl;
         // set id here
         cmdVarInitList.push_back(cmdVarInitalization);
         commandList.push_back(std::make_shared<CommandVarInitialization>(cmdVarInitList.back()));
@@ -293,7 +290,8 @@ std::string CommandTree::commandTypeIdToString(int id)
 
 void CommandTree::displayCommandTree(std::string& prefix)
 {
-    if (prefix == "") std::cout << "\n\nCommandTree:" << std::endl;
+    if(_NCP_CMDTREE_DEBUG_==1) std::cout << "\n\n";
+    if (prefix == "") std::cout << "CommandTree:" << std::endl;
 
     if (commandList.size() > 0)
     {
@@ -312,13 +310,13 @@ void CommandTree::displayCommandTree(std::string& prefix)
             case COMMAND_TYPE::VAR_DEFINITION:
             {
                 auto cvd_dest = std::dynamic_pointer_cast<CommandVarDefinition>(commandList[i]);
-                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << " " << cvd_dest->varType << std::endl;
+                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << " " << cvd_dest->varType << " " << cvd_dest->varData << std::endl;
                 break;
             }
             case COMMAND_TYPE::VAR_INITIALIZATION:
             {
                 auto cvd_dest = std::dynamic_pointer_cast<CommandVarInitialization>(commandList[i]);
-                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << std::endl;
+                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << " " << cvd_dest->varDeclarationId << " " << cvd_dest->varData << std::endl;
                 break;
             }
             case COMMAND_TYPE::STMT_FOR:
@@ -354,7 +352,7 @@ void CommandTree::displayCommandTree(std::string& prefix)
 
     if (prefix == "")
     {
-        std::cout << "\n\nVariable dictionary:\n";
+        std::cout << "\nVariable dictionary:\n";
         for (size_t i = 0; i < usedVarNames.size(); i++)
         {
             std::cout << std::get<0>(usedVarNames[i]) << " " << std::get<1>(usedVarNames[i]) << " " << std::get<2>(usedVarNames[i]) << std::endl;

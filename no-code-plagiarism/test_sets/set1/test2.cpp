@@ -2,5 +2,6 @@
 
 int main()
 {
-    int a=5+10;
+    int a = 10;
+    a = 12;
 }

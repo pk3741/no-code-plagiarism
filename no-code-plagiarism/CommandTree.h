@@ -1,6 +1,12 @@
 #ifndef _COMMAND_TREE_H
 #define _COMMAND_TREE_H
 
+#ifndef _NCP_CMDTREE_DEBUG_
+#define _NCP_CMDTREE_DEBUG_ 0
+#endif // !_NCP_CMDTREE_DEBUG_
+
+
+
 #include <vector>
 #include <iostream>
 #include <string>
@@ -42,9 +48,10 @@ public:
     CommandTree * parent;
     void setParent(CommandTree*);
     std::string prefix;
+    std::vector<std::vector<long>> comutations; //comutations
     ~CommandTree();
 };
 
 std::string trimStr(std::string&);
 
-#endif
+#endif // !_COMMAND_TREE_H
