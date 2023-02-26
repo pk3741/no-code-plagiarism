@@ -28,6 +28,7 @@ CommandFuncExecution::~CommandFuncExecution() {}
 CommandFuncDeclaration::CommandFuncDeclaration() {}
 CommandFuncDeclaration::~CommandFuncDeclaration() {}
 
+//COMMAND_STATEMENT
 CommandStatement::CommandStatement():loopEnded(false) {}
 CommandStatement::~CommandStatement() {}
 

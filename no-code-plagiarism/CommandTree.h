@@ -39,6 +39,9 @@ public:
     COMMAND_TYPE createCommand(std::string&);
     std::vector<std::string> createParametersVec(std::string&);
     std::vector<std::shared_ptr<Command>>& getCommandListPtrVec();
+    CommandTree * parent;
+    void setParent(CommandTree*);
+    std::string prefix;
     ~CommandTree();
 };
 

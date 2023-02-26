@@ -1,6 +1,6 @@
 #include "CommandTree.h"
 
-CommandTree::CommandTree() : variable_counter(0)
+CommandTree::CommandTree() : variable_counter(0), parent(nullptr), prefix("")
 {
 
 }
@@ -30,7 +30,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     //VAR_INITIALIZATION 2
     if (found == false)
     {
-        std::regex varInitializationRegex("(\\w+)=(\\w+)[;]");
+        std::regex varInitializationRegex("(\\w+)=(.+)[;]");
         bool isVarInitialization = std::regex_match(str, matches, varInitializationRegex);
         isVarInitialization ? commandType = COMMAND_TYPE::VAR_INITIALIZATION : COMMAND_TYPE::UNDEFINED;
         isVarInitialization ? found = true : found = false;
@@ -39,7 +39,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     //VAR_DEFINITION 3
     if (found == false)
     {
-        std::regex varDefinitionRegex("(\\w+)(\\s)(\\w+)=(\\w+)[;]");
+        std::regex varDefinitionRegex("(\\w+)(\\s)(\\w+)=(.+)[;]");
         bool isVarDefinition = std::regex_match(str, matches, varDefinitionRegex);
         isVarDefinition ? commandType = COMMAND_TYPE::VAR_DEFINITION : COMMAND_TYPE::UNDEFINED;
         isVarDefinition ? found = true : found = false;
@@ -323,49 +323,30 @@ void CommandTree::displayCommandTree(std::string& prefix)
             }
             case COMMAND_TYPE::STMT_FOR:
             {
-                std::string prefix = "\t";
                 auto cvd_dest = std::dynamic_pointer_cast<CommandStatementFor>(commandList[i]);
-                std::cout << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
-                cvd_dest.get()->subCommands->displayCommandTree(prefix);
+                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
+                std::string subprefix = prefix + "\t";
+                cvd_dest.get()->subCommands->displayCommandTree(subprefix);
                 break;
             }
             case COMMAND_TYPE::STMT_WHILE:
             {
-                std::string prefix = "\t";
                 auto cvd_dest = std::dynamic_pointer_cast<CommandStatementWhile>(commandList[i]);
-                std::cout << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
-                cvd_dest.get()->subCommands->displayCommandTree(prefix);
+                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
+                std::string subprefix = prefix + "\t";
+                cvd_dest.get()->subCommands->displayCommandTree(subprefix);
                 break;
             }
             case COMMAND_TYPE::STMT_IF:
             {
-                std::string prefix = "\t";
                 auto cvd_dest = std::dynamic_pointer_cast<CommandStatementIf>(commandList[i]);
-                std::cout << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
-                cvd_dest.get()->subCommands->displayCommandTree(prefix);
+                std::cout << prefix << commandTypeIdToString((int)cvd_dest->commandType) << std::endl;
+                std::string subprefix = prefix + "\t";
+                cvd_dest.get()->subCommands->displayCommandTree(subprefix);
                 break;
             }
             }
         }
-
-        ////VAR_DECLARATION
-        //if(commandList[i]->commandType==COMMAND_TYPE::VAR_DECLARATION)
-        //{ 
-        //    auto cvd = commandList[i];
-        //    std::cout << "varType: " << cvd->varType << ", varDeclarationId: " << cvd->varDeclarationId << std::endl;
-        //}
-        ////VAR_INITIALIZATION
-        //else if (commandList[i]->commandType == COMMAND_TYPE::VAR_INITIALIZATION)
-        //{
-        //    auto cvd = commandList[i];
-        //    std::cout << "varData: "<< cvd->varData << std::endl;
-        //}
-        ////VAR_DEFINITION
-        //else if (commandList[i]->commandType == COMMAND_TYPE::VAR_DEFINITION)
-        //{
-        //    auto cvd = commandList[i];
-        //    std::cout << "varType: " << cvd->varType << ", varData: " << cvd->varData << std::endl;
-        //}
         //FUNC_DEFINITION
         //FUNC_EXECUTION
         //FUNC_EXECUTION
@@ -380,6 +361,11 @@ void CommandTree::displayCommandTree(std::string& prefix)
         }
     }
 
+}
+
+void CommandTree::setParent(CommandTree* ct_ptr)
+{
+    parent = ct_ptr;
 }
 
 CommandTree::~CommandTree()
