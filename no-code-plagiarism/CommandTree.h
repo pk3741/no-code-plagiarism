@@ -49,7 +49,7 @@ public:
     void setParent(CommandTree*);
     std::string prefix;
     std::vector<std::vector<long>> comutations; //comutations
-    ~CommandTree();
+    virtual ~CommandTree();
 };
 
 std::string trimStr(std::string&);

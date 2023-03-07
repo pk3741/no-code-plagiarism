@@ -38,7 +38,8 @@ class CommandVarDeclaration : public Command
 public:
     int varDeclarationId;
     std::string varType;
-    CommandVarDeclaration();
+    //VAR_DECLARATION 1
+    CommandVarDeclaration() : varDeclarationId(-1) {}
     virtual ~CommandVarDeclaration();
 };
 

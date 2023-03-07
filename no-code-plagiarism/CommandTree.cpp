@@ -368,7 +368,6 @@ void CommandTree::setParent(CommandTree* ct_ptr)
 
 CommandTree::~CommandTree()
 {
-
 }
 
 std::vector<std::shared_ptr<Command>>& CommandTree::getCommandListPtrVec()

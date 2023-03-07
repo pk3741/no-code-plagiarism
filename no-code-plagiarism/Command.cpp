@@ -4,8 +4,6 @@
 Command::Command() {}
 Command::~Command() {}
 
-//VAR_DECLARATION 1
-CommandVarDeclaration::CommandVarDeclaration() {}
 CommandVarDeclaration::~CommandVarDeclaration() {}
 
 //VAR_INITIALIZATION 2
@@ -30,17 +28,17 @@ CommandFuncDeclaration::~CommandFuncDeclaration() {}
 
 //COMMAND_STATEMENT
 CommandStatement::CommandStatement():loopEnded(false) {}
-CommandStatement::~CommandStatement() {}
+CommandStatement::~CommandStatement() { }
 
 //STMT_FOR 7
 CommandStatementFor::CommandStatementFor() { loopEnded=false; }
-CommandStatementFor::~CommandStatementFor() {}
+CommandStatementFor::~CommandStatementFor() { }
 
 //STMT_WHILE 8
 CommandStatementWhile::CommandStatementWhile() { loopEnded=false; }
-CommandStatementWhile::~CommandStatementWhile() {}
+CommandStatementWhile::~CommandStatementWhile() { }
 
 //STMT_IF 9
 CommandStatementIf::CommandStatementIf() { loopEnded=false; }
-CommandStatementIf::~CommandStatementIf() {}
+CommandStatementIf::~CommandStatementIf() { }
 
