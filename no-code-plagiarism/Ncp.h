@@ -16,6 +16,7 @@ public:
     CommandTree createCommandTree(std::ifstream& file); //creates command tree
     std::vector<std::tuple<long,std::string>> compareCommandTrees(CommandTree&, CommandTree&); //return tuple vector <long line number, string info>
     void setCommandTreeComutations(CommandTree&);
+    bool compareCommand(std::shared_ptr<Command>&, std::shared_ptr<Command>&);
     ~Ncp();
     
 };

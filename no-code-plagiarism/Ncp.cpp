@@ -67,61 +67,76 @@ CommandTree Ncp::createCommandTree(std::ifstream& file)
 
 void Ncp::setCommandTreeComutations(CommandTree& ct)
 {
+    std::cout << "\nComutations:\n";
     std::vector<std::vector<long>> * dest = &ct.comutations; //pointer to comutations vector, each index is related to command index in command list
     size_t commandListSize = ct.getCommandListPtrVec().size();
+    std::cout << commandListSize << std::endl;
+    dest->resize(commandListSize);
     //iterate over all commands in command tree
     for (size_t i = 0; i < commandListSize; i++)
     {   
-        //i command
-        auto iRawCommand = ct.getCommandListPtrVec()[i];
-
-        //i command type
-        COMMAND_TYPE iRawCommandType = iRawCommand.get()->commandType;  
-
-        //casted i command to command
-        switch (iRawCommandType)
+        for (size_t j = i+1; j < commandListSize; j++)
         {
-            case COMMAND_TYPE::VAR_DEFINITION:
+            //if spare
+            if (!compareCommand(ct.getCommandListPtrVec()[i], ct.getCommandListPtrVec()[j]))
             {
-                auto iCommand = std::dynamic_pointer_cast<CommandVarDefinition>(iRawCommand);
-                //iterate over all commands starting from next element ending when meet the condition
-                for (size_t j = i+1; j < commandListSize; j++)
-                {
-                    //iterate to when does not more coniuncate
-                    //TODO: funcs like comparetest(std::shared_ptr<CommandVarDefinition> cvd, std::shared<ptr>Command);
-                }
-                break;
+                std::cout << i << " " << j << ": " << "spare" << std::endl;
+                dest->at(i).push_back((long)j);
             }
-            case COMMAND_TYPE::VAR_DECLARATION:
+            else //if not spare
             {
-                auto iCommand = std::dynamic_pointer_cast<CommandVarDeclaration>(iRawCommand);
+                std::cout << i << " " << j << ": " << "not-spare break" << std::endl;
                 break;
+            } 
+        } 
+    }
+
+}
+
+//comparasion for comutation
+bool Ncp::compareCommand(std::shared_ptr<Command>& lhs, std::shared_ptr<Command>& rhs) 
+{
+    auto lhsType = lhs.get()->commandType;
+    auto rhsType = rhs.get()->commandType;
+
+    if (lhsType == COMMAND_TYPE::VAR_DECLARATION)
+    {
+       //skip
+    }
+    else if (lhsType == COMMAND_TYPE::VAR_DEFINITION)
+    {
+        auto lhsCasted = std::dynamic_pointer_cast<CommandVarDefinition>(lhs);
+        if (rhsType == COMMAND_TYPE::VAR_INITIALIZATION)
+        {
+            auto rhsCasted = std::dynamic_pointer_cast<CommandVarInitialization>(rhs);
+            if (lhsCasted.get()->varDeclarationId == rhsCasted.get()->varDeclarationId)
+            {
+                return true;
             }
-            case COMMAND_TYPE::VAR_INITIALIZATION:
+            else
             {
-                auto iCommand = std::dynamic_pointer_cast<CommandVarInitialization>(iRawCommand);
-                break;
-            }
-            case COMMAND_TYPE::STMT_FOR:
-            {
-                auto iCommand = std::dynamic_pointer_cast<CommandStatementFor>(iRawCommand);
-                break;
-            }
-            case COMMAND_TYPE::STMT_IF:
-            {
-                auto iCommand = std::dynamic_pointer_cast<CommandStatementIf>(iRawCommand);
-                break;
-            }
-            case COMMAND_TYPE::STMT_WHILE:
-            {
-                auto iCommand = std::dynamic_pointer_cast<CommandStatementWhile>(iRawCommand);
-                break;
+                return false;
             }
         }
-        
-        
-        
     }
+    else if (lhsType == COMMAND_TYPE::VAR_INITIALIZATION)
+    {
+        auto lhsCasted = std::dynamic_pointer_cast<CommandVarInitialization>(lhs);
+    }
+    if (lhsType == COMMAND_TYPE::STMT_FOR)
+    {
+        auto lhsCasted = std::dynamic_pointer_cast<CommandStatementFor>(lhs);
+    }
+    else if (lhsType == COMMAND_TYPE::STMT_IF)
+    {
+        auto lhsCasted = std::dynamic_pointer_cast<CommandStatementIf>(lhs);
+    }
+    else if (lhsType == COMMAND_TYPE::STMT_WHILE)
+    {
+        auto lhsCasted = std::dynamic_pointer_cast<CommandStatementWhile>(lhs);
+    }
+    return false;
+
 }
 
 std::vector<std::tuple<long, std::string>> Ncp::compareCommandTrees(CommandTree& lhs, CommandTree& rhs)

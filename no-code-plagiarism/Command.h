@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <regex>
+#include <type_traits>
 
 class CommandTree;
 
@@ -136,6 +137,5 @@ public:
     CommandStatementIf();
     virtual ~CommandStatementIf();
 };
-
 
 #endif
