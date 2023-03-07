@@ -19,7 +19,7 @@ class Command;
 class CommandTree
 {
 protected:
-    std::vector<std::shared_ptr<Command>> commandList;
+    std::vector<std::unique_ptr<Command>> commandList;
 
     std::vector<CommandVarDeclaration> cmdVarDecList;
     std::vector<CommandVarInitialization> cmdVarInitList;
@@ -44,7 +44,7 @@ public:
     void displayCommandTree(std::string& prefix);
     COMMAND_TYPE createCommand(std::string&);
     std::vector<std::string> createParametersVec(std::string&);
-    std::vector<std::shared_ptr<Command>>& getCommandListPtrVec();
+    std::vector<std::unique_ptr<Command>>& getCommandListPtrVec();
     CommandTree * parent;
     void setParent(CommandTree*);
     std::string prefix;

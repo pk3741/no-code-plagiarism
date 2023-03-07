@@ -12,8 +12,6 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
     CommandTree originalCommandTree = createCommandTree(original);
     std::cout << "ORIGINAL=====================================\n";
     originalCommandTree.displayCommandTree(nullstr);
-    setCommandTreeComutations(originalCommandTree);
-    displaySpares(originalCommandTree);
     original.close();
 
     std::ifstream copy(pathToCopyFile);
@@ -52,8 +50,8 @@ CommandTree Ncp::createCommandTree(std::ifstream& file)
             actualCommandTree->getCommandListPtrVec().back().get()->commandType == COMMAND_TYPE::STMT_IF)
             )
         {
-            std::dynamic_pointer_cast<CommandStatement>(actualCommandTree->getCommandListPtrVec().back()).get()->subCommands->setParent(actualCommandTree);
-            actualCommandTree = std::dynamic_pointer_cast<CommandStatement>(actualCommandTree->getCommandListPtrVec().back()).get()->subCommands;
+            dynamic_cast<CommandStatement*>(actualCommandTree->getCommandListPtrVec().back().get())->subCommands->setParent(actualCommandTree);
+            actualCommandTree = dynamic_cast<CommandStatement*>(actualCommandTree->getCommandListPtrVec().back().get())->subCommands;
         }
     
         if (line == "}")
@@ -76,17 +74,20 @@ void Ncp::setCommandTreeComutations(CommandTree& ct)
     {   
         for (size_t j = i+1; j < commandListSize; j++)
         {
+            /*
             //if spare
             if (!compareCommand(ct.getCommandListPtrVec()[i], ct.getCommandListPtrVec()[j]))
             {
-                /*std::cout << i << " " << j << ": " << "spare" << std::endl;*/
+                //std::cout << i << " " << j << ": " << "spare" << std::endl;
                 dest->at(i).push_back((long)j);
             }
             else //if not spare
             {
-                /*std::cout << i << " " << j << ": " << "not-spare break" << std::endl;*/
+                //std::cout << i << " " << j << ": " << "not-spare break" << std::endl;
                 break;
             } 
+            */
+            
         } 
     }
 }
@@ -104,7 +105,7 @@ void Ncp::displaySpares(CommandTree& ct)
 }
 
 //comparasion for comutation
-bool Ncp::compareCommand(std::shared_ptr<Command> lhs, std::shared_ptr<Command> rhs) 
+bool Ncp::compareCommand(std::unique_ptr<Command>& lhs, std::unique_ptr<Command>& rhs) 
 {
     auto lhsType = lhs.get()->commandType;
     auto rhsType = rhs.get()->commandType;
@@ -115,12 +116,12 @@ bool Ncp::compareCommand(std::shared_ptr<Command> lhs, std::shared_ptr<Command> 
     }
     else if (lhsType == COMMAND_TYPE::VAR_DEFINITION)
     {
-        auto lhsCasted = std::dynamic_pointer_cast<CommandVarDefinition>(lhs);
+        auto lhsCasted = dynamic_cast<CommandVarDefinition*>(lhs.get());
         if (rhsType == COMMAND_TYPE::VAR_INITIALIZATION)
         {
-            auto rhsCasted = std::dynamic_pointer_cast<CommandVarInitialization>(rhs);
+            auto rhsCasted = dynamic_cast<CommandVarInitialization*>(rhs.get());
             
-            if (lhsCasted.get()->varDeclarationId == rhsCasted.get()->varDeclarationId)
+            if (lhsCasted->varDeclarationId == rhsCasted->varDeclarationId)
             {
                 return true;
             }
@@ -128,11 +129,9 @@ bool Ncp::compareCommand(std::shared_ptr<Command> lhs, std::shared_ptr<Command> 
             {
                 return false;
             }
-            lhsCasted = nullptr;
-            rhsCasted = nullptr;
         }
     }
-    else if (lhsType == COMMAND_TYPE::VAR_INITIALIZATION)
+    /*else if (lhsType == COMMAND_TYPE::VAR_INITIALIZATION)
     {
         auto lhsCasted = std::dynamic_pointer_cast<CommandVarInitialization>(lhs);
     }
@@ -147,7 +146,7 @@ bool Ncp::compareCommand(std::shared_ptr<Command> lhs, std::shared_ptr<Command> 
     else if (lhsType == COMMAND_TYPE::STMT_WHILE)
     {
         auto lhsCasted = std::dynamic_pointer_cast<CommandStatementWhile>(lhs);
-    }
+    }*/
     return false;
 
 }
