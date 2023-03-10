@@ -1,6 +1,6 @@
 #include "CommandTree.h"
 
-CommandTree::CommandTree() : variable_counter(0), parent(nullptr), prefix("")
+CommandTree::CommandTree() : variable_counter(0), parent(nullptr), prefix(""), inLoop(false)
 {
 
 }
@@ -144,6 +144,26 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
             {
                 cmdVarInitalization.varDeclarationId = std::get<1>(usedVarNames[uvn_itt]);
                 break;
+            }
+        }
+
+        if (inLoop == true)
+        {   
+            CommandTree * actual = parent;
+            while(cmdVarInitalization.varDeclarationId==-1 && actual!=nullptr)
+            { 
+                for (int i = 0; i < actual->getCommandListPtrVec().size(); i++)
+                {
+                    for (size_t uvn_itt = 0; uvn_itt < actual->usedVarNames.size(); uvn_itt++)
+                    {
+                        if (std::get<0>(actual->usedVarNames[uvn_itt]) == matches_vec[1])
+                        {
+                            cmdVarInitalization.varDeclarationId = std::get<1>(actual->usedVarNames[uvn_itt]);
+                            break;
+                        }
+                    }
+                }
+                actual = actual->parent;
             }
         }
 

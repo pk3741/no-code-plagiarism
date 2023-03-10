@@ -33,7 +33,6 @@ protected:
     std::vector<CommandStatementWhile> cmdStmtWhileList;
     std::vector<CommandStatementIf> cmdStmtIfList;
 
-    std::vector<std::tuple<std::string, int, std::string>> usedVarNames;
     std::vector<std::string> userFuncNames;
     int variable_counter;
 public:
@@ -47,6 +46,8 @@ public:
     std::vector<std::shared_ptr<Command>>& getCommandListPtrVec();
     CommandTree * parent;
     void setParent(CommandTree*);
+    bool inLoop;
+    std::vector<std::tuple<std::string, int, std::string>> usedVarNames;
     std::string prefix;
     std::vector<std::vector<long>> comutations; //comutations
     virtual ~CommandTree();
