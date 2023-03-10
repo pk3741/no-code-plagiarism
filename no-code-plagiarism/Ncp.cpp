@@ -12,8 +12,6 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
     CommandTree originalCommandTree = createCommandTree(original);
     std::cout << "ORIGINAL=====================================\n";
     originalCommandTree.displayCommandTree(nullstr);
-    setCommandTreeComutations(originalCommandTree);
-    displaySpares(originalCommandTree);
     original.close();
 
     std::ifstream copy(pathToCopyFile);
@@ -78,17 +76,20 @@ void Ncp::setCommandTreeComutations(CommandTree& ct)
     {   
         for (size_t j = i+1; j < commandListSize; j++)
         {
+            /*
             //if spare
             if (!checkForComutation(ct.getCommandListPtrVec()[i], ct.getCommandListPtrVec()[j], ct))
             {
-                /*std::cout << i << " " << j << ": " << "spare" << std::endl;*/
+                //std::cout << i << " " << j << ": " << "spare" << std::endl;
                 dest->at(i).push_back((long)j);
             }
             else //if not spare
             {
-                /*std::cout << i << " " << j << ": " << "not-spare break" << std::endl;*/
+                //std::cout << i << " " << j << ": " << "not-spare break" << std::endl;
                 break;
             } 
+            */
+            
         } 
     }
 }
@@ -106,7 +107,7 @@ void Ncp::displaySpares(const CommandTree& ct)
 }
 
 //comparasion for comutation
-bool Ncp::checkForComutation(const std::shared_ptr<Command> lhs, const std::shared_ptr<Command> rhs, CommandTree& ct) 
+bool Ncp::compareCommand(std::shared_ptr<Command> lhs, std::shared_ptr<Command> rhs) 
 {
     auto lhsType = lhs.get()->commandType;
     auto rhsType = rhs.get()->commandType;
@@ -117,12 +118,12 @@ bool Ncp::checkForComutation(const std::shared_ptr<Command> lhs, const std::shar
     }
     else if (lhsType == COMMAND_TYPE::VAR_DEFINITION)
     {
-        auto lhsCasted = std::dynamic_pointer_cast<CommandVarDefinition>(lhs);
+        auto lhsCasted = dynamic_cast<CommandVarDefinition*>(lhs.get());
         if (rhsType == COMMAND_TYPE::VAR_INITIALIZATION)
         {
-            auto rhsCasted = std::dynamic_pointer_cast<CommandVarInitialization>(rhs);
+            auto rhsCasted = dynamic_cast<CommandVarInitialization*>(rhs.get());
             
-            if (lhsCasted.get()->varDeclarationId == rhsCasted.get()->varDeclarationId)
+            if (lhsCasted->varDeclarationId == rhsCasted->varDeclarationId)
             {
                 return true;
             }
@@ -130,8 +131,6 @@ bool Ncp::checkForComutation(const std::shared_ptr<Command> lhs, const std::shar
             {
                 return false;
             }
-            lhsCasted = nullptr;
-            rhsCasted = nullptr;
         }
         if (rhsType == COMMAND_TYPE::VAR_DEFINITION) // var_def with var_def
         {
@@ -191,7 +190,7 @@ bool Ncp::checkForComutation(const std::shared_ptr<Command> lhs, const std::shar
         }
         return false;
     }
-    else if (lhsType == COMMAND_TYPE::VAR_INITIALIZATION)
+    /*else if (lhsType == COMMAND_TYPE::VAR_INITIALIZATION)
     {
         auto lhsCasted = std::dynamic_pointer_cast<CommandVarInitialization>(lhs);
 
@@ -207,7 +206,7 @@ bool Ncp::checkForComutation(const std::shared_ptr<Command> lhs, const std::shar
     else if (lhsType == COMMAND_TYPE::STMT_WHILE)
     {
         auto lhsCasted = std::dynamic_pointer_cast<CommandStatementWhile>(lhs);
-    }
+    }*/
     return false;
 
 }
