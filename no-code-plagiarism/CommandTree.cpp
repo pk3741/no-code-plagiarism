@@ -170,7 +170,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
         if(_NCP_CMDTREE_DEBUG_==1) std::cout << cmdVarInitalization.varDeclarationId << std::endl;
         // set id here
         cmdVarInitList.push_back(cmdVarInitalization);
-        commandList.push_back(std::make_unique<CommandVarInitialization>(cmdVarInitList.back()));
+        commandList.push_back(std::make_shared<CommandVarInitialization>(cmdVarInitList.back()));
     }
     break;
 
@@ -184,7 +184,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
         variable_counter++;
         cmdVarDefinition.varType = matches_vec[1];
         cmdVarDefList.push_back(cmdVarDefinition);
-        commandList.push_back(std::make_unique<CommandVarDefinition>(cmdVarDefList.back()));
+        commandList.push_back(std::make_shared<CommandVarDefinition>(cmdVarDefList.back()));
     }
     break;
 
@@ -218,7 +218,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
         cmdStatementFor.commandType = commandType;
         cmdStatementFor.subCommands = new CommandTree();
         cmdStmtForList.push_back(cmdStatementFor);
-        commandList.push_back(std::make_unique<CommandStatementFor>(cmdStmtForList.back()));
+        commandList.push_back(std::make_shared<CommandStatementFor>(cmdStmtForList.back()));
     }
     break;
 
@@ -229,7 +229,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
         cmdStatementWhile.commandType = commandType;
         cmdStatementWhile.subCommands = new CommandTree();
         cmdStmtWhileList.push_back(cmdStatementWhile);
-        commandList.push_back(std::make_unique<CommandStatementWhile>(cmdStmtWhileList.back()));
+        commandList.push_back(std::make_shared<CommandStatementWhile>(cmdStmtWhileList.back()));
     }
     break;
 
@@ -240,7 +240,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
         cmdStatementIf.commandType = commandType;
         cmdStatementIf.subCommands = new CommandTree();
         cmdStmtIfList.push_back(cmdStatementIf);
-        commandList.push_back(std::make_unique<CommandStatementIf>(cmdStmtIfList.back()));
+        commandList.push_back(std::make_shared<CommandStatementIf>(cmdStmtIfList.back()));
     }
     break;
 
@@ -392,7 +392,7 @@ CommandTree::~CommandTree()
 {
 }
 
-std::vector<std::unique_ptr<Command>>& CommandTree::getCommandListPtrVec()
+std::vector<std::shared_ptr<Command>>& CommandTree::getCommandListPtrVec()
 {
     return commandList;
 }
