@@ -50,6 +50,7 @@ public:
     std::vector<std::tuple<std::string, int, std::string>> usedVarNames;
     std::string prefix;
     std::vector<std::vector<long>> comutations; //comutations
+     std::vector<std::tuple<int, bool>> compareOutput; //comparation report
     virtual ~CommandTree();
 };
 

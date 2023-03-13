@@ -2,6 +2,9 @@
 
 int main()
 {
-    int a = 10;
-    a = 12;
+    int x = 10;
+    int y = 5;
+    x = 10;
+    y = 5;
+    x = 5;
 }

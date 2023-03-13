@@ -14,9 +14,11 @@ public:
     
     bool checkPlagiarismOfFiles(const std::string&,const std::string&); //load files using paths
     CommandTree createCommandTree(std::ifstream& file); //creates command tree
-    std::vector<std::tuple<long,std::string>> compareCommandTrees(CommandTree&, CommandTree&); //return tuple vector <long line number, string info>
+    std::vector<std::tuple<int,bool>> compareCommandTrees(CommandTree&, CommandTree&); //return tuple vector <long line number, string info>
     void setCommandTreeComutations(CommandTree&);
     bool checkForComutation(const std::shared_ptr<Command>, const std::shared_ptr<Command>, CommandTree&);
+    bool compareCommandTreesForConiunction(CommandTree&, CommandTree&);
+    bool compareCommand(const std::shared_ptr<Command>, const std::shared_ptr<Command>);
     void displaySpares(const CommandTree&);
     virtual ~Ncp();
     

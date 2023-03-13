@@ -146,9 +146,10 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
                 break;
             }
         }
-
+        cmdVarInitalization.parent = this;
         if (inLoop == true)
         {   
+            //std::cout << "inloop" << std::endl;
             CommandTree * actual = parent;
             while(cmdVarInitalization.varDeclarationId==-1 && actual!=nullptr)
             { 
@@ -159,6 +160,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
                         if (std::get<0>(actual->usedVarNames[uvn_itt]) == matches_vec[1])
                         {
                             cmdVarInitalization.varDeclarationId = std::get<1>(actual->usedVarNames[uvn_itt]);
+                            cmdVarInitalization.parent = actual;
                             break;
                         }
                     }
@@ -177,6 +179,7 @@ COMMAND_TYPE CommandTree::createCommand(std::string& str)
     case 3:
     {
         CommandVarDefinition cmdVarDefinition;
+        cmdVarDefinition.parent = this;
         cmdVarDefinition.commandType = commandType;
         cmdVarDefinition.varData = matches_vec[4];
         cmdVarDefinition.varDeclarationId = variable_counter;

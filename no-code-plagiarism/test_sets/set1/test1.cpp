@@ -2,7 +2,10 @@
 
 int main()
 {
-    int a = 10;
-    int b = 15;
-    int c = a;
+    int x = 10;
+    int y = 5;
+    x = 10;
+    x = 5;
+    y = 5;
 }
+

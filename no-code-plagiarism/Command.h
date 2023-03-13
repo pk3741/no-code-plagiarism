@@ -50,6 +50,7 @@ public:
     int varDeclarationId;
     std::string varData;
     bool upDefined;
+    CommandTree* parent;
     CommandVarInitialization();
     virtual ~CommandVarInitialization();
 };
@@ -61,6 +62,7 @@ public:
     int varDeclarationId;
     std::string varType;
     std::string varData;
+    CommandTree* parent;
     CommandVarDefinition();
     virtual ~CommandVarDefinition();
 };
