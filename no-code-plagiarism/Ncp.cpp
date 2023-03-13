@@ -21,17 +21,17 @@ bool Ncp::checkPlagiarismOfFiles(const std::string& pathToOrginalFile, const std
     CommandTree copyCommandTree = createCommandTree(copy);
     std::cout << "\nCOPY=========================================\n";
     copyCommandTree.displayCommandTree(nullstr);
-    setCommandTreeComutations(copyCommandTree);
-    displaySpares(copyCommandTree);
     copy.close();
 
-    std::vector<std::tuple<int, bool>> comparation = compareCommandTrees(originalCommandTree, copyCommandTree);
+    std::vector<std::tuple<int, int>> comparation = compareCommandTrees(originalCommandTree, copyCommandTree);
     std::cout << "\nComparation:\n";
+    int count_good = 0;
     for (auto i : comparation)
     {
         std::cout << std::get<0>(i) << " " << std::get<1>(i) << std::endl;
+        if(std::get<1>(i)==1) count_good++;
     }
-
+    std::cout << "Total comperasion result: " << ((float)count_good/(float)comparation.size())*100 << "%" << std::endl;
     return true;
 }
 
@@ -71,7 +71,7 @@ CommandTree Ncp::createCommandTree(std::ifstream& file)
         }
 
         if (line == "}")
-        {   
+        {
             //std::cout << "endloop" << std::endl;
             actualCommandTree->inLoop = false;
             actualCommandTree = actualCommandTree->parent;
@@ -197,7 +197,7 @@ bool Ncp::checkForComutation(std::shared_ptr<Command> lhs, std::shared_ptr<Comma
             rhsCasted = nullptr;
         }
         if (rhsType == COMMAND_TYPE::VAR_DEFINITION) // var_def with var_def
-        {   
+        {
             //LHS: var_definiton RHS: ^
             auto rhsCasted = std::dynamic_pointer_cast<CommandVarDefinition>(rhs);
 
@@ -252,6 +252,7 @@ bool Ncp::checkForComutation(std::shared_ptr<Command> lhs, std::shared_ptr<Comma
                     return true;
                 }
             }
+            return false;
         }
         else if (rhsType == COMMAND_TYPE::STMT_FOR || rhsType == COMMAND_TYPE::STMT_IF || rhsType == COMMAND_TYPE::STMT_WHILE)
         {
@@ -260,22 +261,22 @@ bool Ncp::checkForComutation(std::shared_ptr<Command> lhs, std::shared_ptr<Comma
             auto toCheckId = lhsCasted.get()->varDeclarationId;
             auto toCheckParent = lhsCasted.get()->parent;
             auto rhsCasted = std::dynamic_pointer_cast<CommandStatement>(rhs);
-            
+
             for (auto i : rhsCasted.get()->subCommands->getCommandListPtrVec())
             {
                 if (i.get()->commandType == COMMAND_TYPE::VAR_INITIALIZATION)
                 {
                     auto iCasted = std::dynamic_pointer_cast<CommandVarInitialization>(i);
-                    if (iCasted.get()->varDeclarationId == toCheckId && lhsCasted.get()->parent==iCasted.get()->parent)
+                    if (iCasted.get()->varDeclarationId == toCheckId && lhsCasted.get()->parent == iCasted.get()->parent)
                     {
                         return true;
                     }
                 }
-                else if(i.get()->commandType == COMMAND_TYPE::STMT_FOR || i.get()->commandType == COMMAND_TYPE::STMT_IF || i.get()->commandType == COMMAND_TYPE::STMT_WHILE)
+                else if (i.get()->commandType == COMMAND_TYPE::STMT_FOR || i.get()->commandType == COMMAND_TYPE::STMT_IF || i.get()->commandType == COMMAND_TYPE::STMT_WHILE)
                 {
                     return checkForComutation(lhs, std::dynamic_pointer_cast<Command>(i), ct);
                 }
-                
+
             }
             return false;
 
@@ -302,23 +303,23 @@ bool Ncp::checkForComutation(std::shared_ptr<Command> lhs, std::shared_ptr<Comma
         {
             return checkForComutation(rhs, lhs, ct);
         }
-       /* else if (rhsType == COMMAND_TYPE::STMT_FOR || rhsType == COMMAND_TYPE::STMT_IF || rhsType == COMMAND_TYPE::STMT_WHILE)
-        {
-            auto rhsCasted = std::dynamic_pointer_cast<CommandStatement>(rhs);
-            bool returnable = false;
-            for (auto cmd : rhsCasted.get()->subCommands->getCommandListPtrVec())
-            {
-                if (cmd.get()->commandType == COMMAND_TYPE::VAR_INITIALIZATION)
-                {
-                    auto cmdCasted = std::dynamic_pointer_cast<CommandVarInitialization>(cmd);
-                    if (cmdCasted.get()->parent == lhsCasted.get()->parent)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }*/
+        /* else if (rhsType == COMMAND_TYPE::STMT_FOR || rhsType == COMMAND_TYPE::STMT_IF || rhsType == COMMAND_TYPE::STMT_WHILE)
+         {
+             auto rhsCasted = std::dynamic_pointer_cast<CommandStatement>(rhs);
+             bool returnable = false;
+             for (auto cmd : rhsCasted.get()->subCommands->getCommandListPtrVec())
+             {
+                 if (cmd.get()->commandType == COMMAND_TYPE::VAR_INITIALIZATION)
+                 {
+                     auto cmdCasted = std::dynamic_pointer_cast<CommandVarInitialization>(cmd);
+                     if (cmdCasted.get()->parent == lhsCasted.get()->parent)
+                     {
+                         return true;
+                     }
+                 }
+             }
+             return false;
+         }*/
         return true;
 
     }
@@ -334,11 +335,11 @@ bool Ncp::checkForComutation(std::shared_ptr<Command> lhs, std::shared_ptr<Comma
             {
                 for (auto j : rhsCasted.get()->subCommands->getCommandListPtrVec())
                 {
-                        std::cout << (int)i.get()->commandType << " " << (int)j.get()->commandType << std::endl;
-                        return checkForComutation(i, j, ct);//!tocheck
-                        std::cout << check << std::endl;
+                    std::cout << (int)i.get()->commandType << " " << (int)j.get()->commandType << std::endl;
+                    return checkForComutation(i, j, ct);//!tocheck
+                    std::cout << check << std::endl;
                 }
-                
+
             }
             return check;
         }
@@ -413,7 +414,7 @@ bool Ncp::checkForComutation(std::shared_ptr<Command> lhs, std::shared_ptr<Comma
             return false;
         }
 
-        }
+    }
     /*
     else if (lhsType == COMMAND_TYPE::STMT_IF)
     {
@@ -449,33 +450,113 @@ bool Ncp::compareCommandTreesForConiunction(CommandTree& lhs, CommandTree& rhs)
     return output;
 }
 
-std::vector<std::tuple<int, bool>> Ncp::compareCommandTrees(CommandTree& lhs, CommandTree& rhs)
+std::vector<std::tuple<int, int>> Ncp::compareCommandTrees(CommandTree& lhs, CommandTree& rhs)
 {
-    std::vector<std::tuple<int, bool>> output;
-    
-    for (auto lhs_item : lhs.getCommandListPtrVec())
+    std::vector<std::tuple<int, int>> output;
+
+    for (size_t i = 0; i < lhs.getCommandListPtrVec().size(); i++)
     {
-        for (auto rhs_item : rhs.getCommandListPtrVec())
+        for (size_t j = 0; j < rhs.getCommandListPtrVec().size(); j++)
         {
-            compareCommand(lhs_item, rhs_item);
+            if (i == j)
+            {
+                int check = compareCommand(lhs.getCommandListPtrVec()[i], rhs.getCommandListPtrVec()[j], lhs, rhs, (int)i);
+                std::tuple<int, int> tempTuple;
+                tempTuple = std::make_tuple((int)i, check);
+                output.push_back(tempTuple);
+            }
         }
     }
-
-
     return output;
 }
 
-bool Ncp::compareCommand(const std::shared_ptr<Command> lhs, const std::shared_ptr<Command> rhs)
+int Ncp::compareCommand(const std::shared_ptr<Command> lhs, const std::shared_ptr<Command> rhs, CommandTree& lhsct, CommandTree& rhsct, int lhsindex=0)
 {
     if (lhs.get()->commandType != rhs.get()->commandType)
     {
+        //return 0;
+        if (lhsct.comutations.size() > 0)
+        {
+            std::vector<long>* icomutations = &lhsct.comutations[lhsindex];
+            if(icomutations!=nullptr)
+            {
+                for (size_t i = 0; i < icomutations->size(); i++)
+                {
+                    if (compareCommand(lhs, rhsct.getCommandListPtrVec()[icomutations->at(i)], lhsct, rhsct, lhsindex))
+                    {
+                        //swap lhs with rhsct...
+                        std::shared_ptr<Command> temp = lhsct.getCommandListPtrVec()[lhsindex];
+                        lhsct.getCommandListPtrVec()[lhsindex] = lhsct.getCommandListPtrVec()[icomutations->at(i)];
+                        lhsct.getCommandListPtrVec()[icomutations->at(i)] = temp;
+                        //setCommandTreeComutations(lhsct);
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
     else
     {
+        if (lhs.get()->commandType == COMMAND_TYPE::VAR_INITIALIZATION)
+        {
+            auto lhsCasted = std::dynamic_pointer_cast<CommandVarInitialization>(lhs);
+            auto rhsCasted = std::dynamic_pointer_cast<CommandVarInitialization>(rhs);
+            if  (lhsCasted.get()->varData == rhsCasted.get()->varData && 
+                lhsCasted.get()->varDeclarationId == rhsCasted.get()->varDeclarationId &&
+                lhsCasted.get()->varData == rhsCasted.get()->varData
+                )
+            {
+                return 1;
+            }
+            return 0;
 
+        }
+        else if (lhs.get()->commandType == COMMAND_TYPE::VAR_DEFINITION)
+        {
+            auto lhsCasted = std::dynamic_pointer_cast<CommandVarDefinition>(lhs);
+            auto rhsCasted = std::dynamic_pointer_cast<CommandVarDefinition>(rhs);
+            if  (lhsCasted.get()->varData == rhsCasted.get()->varData &&
+                rhsCasted.get()->varType == rhsCasted.get()->varType &&
+                lhsCasted.get()->varDeclarationId == rhsCasted.get()->varDeclarationId
+                )
+            {
+                return 1;
+            }
+            return 0;
+        }
+        else if (lhs.get()->commandType == COMMAND_TYPE::STMT_FOR)
+        {
+            auto lhsCasted = std::dynamic_pointer_cast<CommandStatementFor>(lhs);
+            auto rhsCasted = std::dynamic_pointer_cast<CommandStatementFor>(rhs);
+            for (size_t i = 0; i < lhsCasted.get()->subCommands->getCommandListPtrVec().size(); i++)
+            {
+                for (size_t j = 0; j < rhsCasted.get()->subCommands->getCommandListPtrVec().size(); i++)
+                {
+                    if (i == j)
+                    {
+                        return compareCommand(lhsCasted.get()->subCommands->getCommandListPtrVec()[i], rhsCasted.get()->subCommands->getCommandListPtrVec()[i], *lhsCasted.get()->subCommands, *rhsCasted.get()->subCommands);
+                    }
+                }
+            }
+
+        }
+        else if (lhs.get()->commandType == COMMAND_TYPE::STMT_IF)
+        {
+            auto lhsCasted = std::dynamic_pointer_cast<CommandStatementIf>(lhs);
+            auto rhsCasted = std::dynamic_pointer_cast<CommandStatementIf>(rhs);
+        }
+        else if (lhs.get()->commandType == COMMAND_TYPE::STMT_WHILE)
+        {
+            auto lhsCasted = std::dynamic_pointer_cast<CommandStatementWhile>(lhs);
+            auto rhsCasted = std::dynamic_pointer_cast<CommandStatementWhile>(rhs);
+        }
+        else
+        {
+            return -1;
+        }
     }
-    
+
 }
 
 Ncp::~Ncp()

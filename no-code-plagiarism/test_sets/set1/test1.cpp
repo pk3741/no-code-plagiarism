@@ -3,9 +3,15 @@
 int main()
 {
     int x = 10;
-    int y = 5;
-    x = 10;
-    x = 5;
-    y = 5;
+    for (int i = 0; i < 10; i++)
+    {
+        x = 3;
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        int x = 3;
+    }
+    int a = x;
+    //dodac for i while zamiennie, moze tablice i wskazniki :<
 }
 
